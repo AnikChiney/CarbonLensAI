@@ -2,19 +2,23 @@
 
 import express from "express";
 import {
-	authPostTest,
-	authTest,
-	createUser,
-	loginUser,
-	logoutUser,
+  createUser,
+  loginUser,
+  googleAuth,
+  logoutUser,
+  authTest,
+  authPostTest,
 } from "../controllers/authController.js";
 
 const router = express.Router();
 
-router.post("/login", loginUser);
+router.get("/authTest", authTest);
+router.post("/authPostTest", authPostTest);
+
 router.post("/register", createUser);
+router.post("/login", loginUser);
+router.post("/google", googleAuth);   // 👈 IMPORTANT
 router.post("/logout", logoutUser);
-router.get("/test", authTest);
-router.post("/postTest", authPostTest);
 
 export default router;
+

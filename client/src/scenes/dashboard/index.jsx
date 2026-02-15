@@ -24,7 +24,7 @@ const Dashboard = () => {
   const currentMonth = currentDate.getMonth() + 1;
   const currentYear = currentDate.getFullYear();
 
-  const { data, isLoading } = useGetCarbonStatsQuery({
+  const { data  } = useGetCarbonStatsQuery({
     year: currentYear,
     month: currentMonth,
   });

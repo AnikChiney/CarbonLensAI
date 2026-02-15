@@ -1,8 +1,9 @@
+import Home from "scenes/home";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { themeSettings } from "theme";
 import Layout from "scenes/layout";
 import Login from "scenes/login";
@@ -32,30 +33,36 @@ function App() {
 				<CssBaseline />
 				<ToastContainer />
 				<Routes>
-					<Route path="" element={<PrivateRoute />}>
+
+					{/* Public Routes */}
+					<Route path="/" element={<Home />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/register" element={<Register />} />
+
+					{/* Protected Routes */}
+					<Route element={<PrivateRoute />}>
 						<Route element={<Layout />}>
-							{" "}
-							{/* will exist on every page. Eg, navbar and sidebar. */}
-							<Route path="/" element={<Navigate to="/dashboard" replace />} />
-							{/* general */}
-							<Route path="/dashboard" element={<Dashboard />} />
-							<Route path="/envmetrics" element={<EnvironmentMetrics />} />
-							{/* For You */}
-							<Route path="/water-usage" element={<WaterUsage />} />
-							<Route path="/ecofriendly-tips" element={<EcofriendlyTips />} />
-							<Route path="/who-standards" element={<WHOstandards />} />
-							<Route path="/carbon-footprint" element={<CarbonFootprint />} />
-							{/* news and events */}
-							<Route path="/top-headlines" element={<TopHeadlines />} />
-							<Route path="/local-news" element={<LocalNews />} />
-							<Route path="/global-news" element={<GlobalNews />} />
+						
+						{/* general */}
+						<Route path="/dashboard" element={<Dashboard />} />
+						<Route path="/envmetrics" element={<EnvironmentMetrics />} />
+
+						{/* For You */}
+						<Route path="/water-usage" element={<WaterUsage />} />
+						<Route path="/ecofriendly-tips" element={<EcofriendlyTips />} />
+						<Route path="/who-standards" element={<WHOstandards />} />
+						<Route path="/carbon-footprint" element={<CarbonFootprint />} />
+
+						{/* news and events */}
+						<Route path="/top-headlines" element={<TopHeadlines />} />
+						<Route path="/local-news" element={<LocalNews />} />
+						<Route path="/global-news" element={<GlobalNews />} />
+						
 						</Route>
 					</Route>
-					<Route>
-						<Route path="/login" element={<Login />} />
-						<Route path="/register" element={<Register />} />
-					</Route>
+
 				</Routes>
+
 			</ThemeProvider>
 		</BrowserRouter>
 	);
