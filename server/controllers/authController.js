@@ -21,26 +21,43 @@ const createUser = asyncHandler(async (req, res) => {
     req.body;
 
   const existingUser = await User.findOne({ email });
+
   if (existingUser) {
     return res.status(400).json({ message: "User already exists" });
   }
 
-  const user = new User({
+  const user = await User.create({
     fname,
     lname,
     email,
     password,
     image: image || "profile.jpg",
+    phone: phone || "",
     city: city || "Prayagraj",
     country: country || "India",
   });
 
-  if (phone) user.phone = phone;
+  // 🔥 Generate JWT token (IMPORTANT)
+  const token = jwt.sign(
+    { userId: user._id },
+    process.env.JWT_SECRET,
+    { expiresIn: "30d" }
+  );
 
-  await user.save();
-
-  res.status(201).json({ message: "User created successfully" });
+  // 🔥 Return FULL USER DATA (VERY IMPORTANT)
+  res.status(201).json({
+    _id: user._id,
+    fname: user.fname,
+    lname: user.lname,
+    email: user.email,
+    phone: user.phone,
+    city: user.city,
+    country: user.country,
+    image: user.image,
+    token,
+  });
 });
+
 
 /* ================= LOGIN USER ================= */
 
@@ -61,6 +78,10 @@ const loginUser = asyncHandler(async (req, res) => {
       fname: user.fname,
       lname: user.lname,
       email: user.email,
+      phone: user.phone,
+      city: user.city,
+      country: user.country,
+      image: user.image,
       token,
     });
   } else {
@@ -68,13 +89,13 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
+
 /* ================= GOOGLE AUTH ================= */
 
 const googleAuth = asyncHandler(async (req, res) => {
   try {
     const { access_token } = req.body;
 
-    // Get user info from Google
     const googleRes = await axios.get(
       "https://www.googleapis.com/oauth2/v3/userinfo",
       {
@@ -88,7 +109,6 @@ const googleAuth = asyncHandler(async (req, res) => {
 
     let user = await User.findOne({ email });
 
-    // If user does not exist → create
     if (!user) {
       user = await User.create({
         fname: given_name,
@@ -101,7 +121,6 @@ const googleAuth = asyncHandler(async (req, res) => {
       });
     }
 
-    // Generate JWT
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
@@ -113,6 +132,10 @@ const googleAuth = asyncHandler(async (req, res) => {
       fname: user.fname,
       lname: user.lname,
       email: user.email,
+      phone: user.phone,
+      city: user.city,
+      country: user.country,
+      image: user.image,
       token,
     });
 
@@ -121,6 +144,7 @@ const googleAuth = asyncHandler(async (req, res) => {
     res.status(400).json({ message: "Google authentication failed" });
   }
 });
+
 
 /* ================= LOGOUT ================= */
 

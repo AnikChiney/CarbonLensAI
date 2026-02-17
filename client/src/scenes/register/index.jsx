@@ -44,28 +44,34 @@ export default function SignUp() {
   const [googleAuth] = useGoogleLoginMutation();
 
   // ================= NORMAL SIGN UP =================
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  const data = new FormData(event.currentTarget);
 
-    const payload = {
-      fname: data.get("fname"),
-      lname: data.get("lname"),
-      email: data.get("email"),
-      password: data.get("password"),
-      phone: data.get("phone"),
-      city: data.get("city"),
-      country: data.get("country"),
-    };
-
-    try {
-      await register(payload).unwrap();
-      toast.success("Account created successfully! Please login.");
-      navigate("/login");
-    } catch (err) {
-      toast.error(err?.data?.message || "Registration failed");
-    }
+  const payload = {
+    fname: data.get("fname"),
+    lname: data.get("lname"),
+    email: data.get("email"),
+    password: data.get("password"),
+    phone: data.get("phone"),
+    city: data.get("city"),
+    country: data.get("country"),
   };
+
+  try {
+    const res = await register(payload).unwrap();
+
+    // 🔥 Update Redux with new user
+    dispatch(setCredentials(res));
+
+    toast.success("Account created successfully!");
+    navigate("/dashboard");
+
+  } catch (err) {
+    toast.error(err?.data?.message || "Registration failed");
+  }
+};
+
 
   // ================= GOOGLE SIGN UP =================
   const googleSignUp = useGoogleLogin({

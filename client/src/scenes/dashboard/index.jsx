@@ -1,120 +1,175 @@
 import React from "react";
 import FlexBetween from "components/FlexBetween";
 import Header from "components/Header";
-import { Co2, DownloadOutlined } from "@mui/icons-material";
+import {
+  Co2,
+  DownloadOutlined,
+  Business,
+  Person,
+} from "@mui/icons-material";
 import {
   Box,
   Button,
   Typography,
-  useTheme,
+  //useTheme,
   useMediaQuery,
 } from "@mui/material";
-import BreakdownChart from "components/BreakdownChart";
+import { useNavigate } from "react-router-dom";
+//import BreakdownChart from "components/BreakdownChart";
 import OverviewChart from "components/OverviewChart";
-import { useGetCarbonStatsQuery, useGetOneTipQuery } from "state/api";
+import { useGetCarbonStatsQuery } from "state/api";
 import OverviewBox from "components/OverviewBox";
 import WeatherInfo from "components/WeatherInfo";
 import NewsFeedDashboard from "components/NewsFeedsDashboard";
 
 const Dashboard = () => {
-  const theme = useTheme();
-  const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
+  //const theme = useTheme();
+  const navigate = useNavigate();
+  const isNonMediumScreens = useMediaQuery("(min-width:1200px)");
 
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;
   const currentYear = currentDate.getFullYear();
 
-  const { data  } = useGetCarbonStatsQuery({
+  const { data } = useGetCarbonStatsQuery({
     year: currentYear,
     month: currentMonth,
   });
 
-  const { data: tip, isLoading: isLoadingTip } = useGetOneTipQuery();
+  const dashboardCardStyle = {
+    position: "relative",
+    background: "rgba(255, 255, 255, 0.05)",
+    backdropFilter: "blur(16px)",
+    borderRadius: "20px",
+    border: "1px solid rgba(255,255,255,0.1)",
+    overflow: "hidden",
+    boxShadow: "0 8px 32px rgba(0,0,0,0.37)",
+    transition: "all 0.4s ease",
+    "&:hover": {
+      transform: "translateY(-6px)",
+    },
+  };
+
+  const glowBorder = {
+    position: "absolute",
+    inset: 0,
+    borderRadius: "20px",
+    padding: "2px",
+    background:
+      "linear-gradient(120deg, #00ffaa, #00c6ff, #0072ff, #00ffaa)",
+    backgroundSize: "300% 300%",
+    animation: "glowMove 6s linear infinite",
+    WebkitMask:
+      "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+    WebkitMaskComposite: "xor",
+    maskComposite: "exclude",
+  };
 
   return (
-    <Box m="1.5rem 2.5rem">
-      <FlexBetween>
+    <Box
+      m="1.5rem 2.5rem"
+      sx={{
+        "@keyframes glowMove": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
+        "@keyframes fadeUp": {
+          "0%": { opacity: 0, transform: "translateY(30px)" },
+          "100%": { opacity: 1, transform: "translateY(0)" },
+        },
+      }}
+    >
+      {/* HEADER */}
+      <FlexBetween mb="2rem">
         <Header
-          title="DASHBOARD"
-          subtitle="See how well are you doing in saving the environment..."
+          title="CarbonLensAI"
+          subtitle="AI-powered carbon emission intelligence platform"
         />
 
-        <Box>
-          <Button
-            sx={{
-              backgroundColor: theme.palette.secondary.light,
-              color: theme.palette.background.alt,
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: "10px 20px",
-            }}
-          >
-            <DownloadOutlined sx={{ mr: "10px" }} />
-            COMING SOON
-          </Button>
-        </Box>
+        <Button
+          sx={{
+            background: "linear-gradient(90deg, #00c6ff, #0072ff)",
+            color: "#fff",
+            fontSize: "14px",
+            fontWeight: "bold",
+            px: 3,
+            py: 1,
+            borderRadius: "10px",
+            transition: "0.3s",
+            "&:hover": { opacity: 0.85 },
+          }}
+        >
+          <DownloadOutlined sx={{ mr: 1 }} />
+          REPORT
+        </Button>
       </FlexBetween>
 
+      {/* GRID */}
       <Box
-        mt="20px"
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
         gridAutoRows="160px"
-        gap="30px"
+        gap="24px"
         sx={{
-          "& > div": { gridColumn: isNonMediumScreens ? undefined : "span 12" },
+          "& > div": {
+            gridColumn: isNonMediumScreens ? undefined : "span 12",
+          },
         }}
-      >
-        {/* Image Section */}
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor="transparent"
-          p="1rem"
-          borderRadius="0.55rem"
-          display="flex"
-          justifyContent="space-between"
-        >
-          <Box
-            component="img"
-            sx={{ height: 330, width: 330 }}
-            alt="Love Earth"
-            src="/dashboard.png"
-          />
-        </Box>
+      > 
 
-        {/* Tip Section (FIXED) */}
+        {/* INDIVIDUALS CARD */}
         <Box
-          gridColumn="span 8"
+          gridColumn="span 6"
           gridRow="span 2"
-          backgroundColor="transparent"
-          p="1rem"
-          borderRadius="0.55rem"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
+          sx={{ ...dashboardCardStyle, p: "2rem", cursor: "pointer" }}
+          onClick={() => navigate("/individual")}
         >
-          <Typography variant="h1" sx={{ fontWeight: "bold" }}>
-            {isLoadingTip
-              ? "Loading tip..."
-              : tip?.data?.length > 0
-              ? tip.data[0].content
-              : "No tip available"}
+          <Box sx={glowBorder} />
+
+          <Person sx={{ fontSize: 42, mb: 2, color: "#00ffaa" }} />
+
+          <Typography variant="h5" fontWeight="bold" mb={1}>
+            Individuals
+          </Typography>
+
+          <Typography sx={{ opacity: 0.75 }}>
+            Track your personal carbon footprint, receive AI-powered
+            insights, and take climate-conscious daily actions.
           </Typography>
         </Box>
 
-        {/* Weather */}
+        {/* INDUSTRIAL CARD */}
+        <Box
+          gridColumn="span 6"
+          gridRow="span 2"
+          sx={{ ...dashboardCardStyle, p: "2rem", cursor: "pointer" }}
+          onClick={() => navigate("/industrial")}
+        >
+          <Box sx={glowBorder} />
+
+          <Business sx={{ fontSize: 42, mb: 2, color: "#00c6ff" }} />
+
+          <Typography variant="h5" fontWeight="bold" mb={1}>
+            Industrial
+          </Typography>
+
+          <Typography sx={{ opacity: 0.75 }}>
+            Monitor large-scale emissions, forecast impact using AI
+            models, and optimize sustainability performance.
+          </Typography>
+        </Box>
+
+        {/* WEATHER */}
         <Box
           gridColumn="span 8"
           gridRow="span 2"
-          backgroundColor={theme.palette.background.alt}
-          p="1rem"
-          borderRadius="0.55rem"
+          sx={{ ...dashboardCardStyle, p: "1.8rem" }}
         >
           <WeatherInfo />
         </Box>
 
-        {/* Overview Box */}
+        {/* OVERVIEW */}
         <Box
           gridColumn="span 4"
           gridRow="span 2"
@@ -134,72 +189,33 @@ const Dashboard = () => {
             others={parseInt(
               data?.carbonData?.categories?.others || 0
             )}
-            icon={
-              <Co2
-                sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
-              />
-            }
+            icon={<Co2 sx={{ color: "#00ffaa", fontSize: 28 }} />}
             rowSpan={2}
             colSpan={4}
           />
         </Box>
 
-        {/* Breakdown Chart (SAFE RENDER) */}
-        {data?.carbonData?.categories && (
-          <Box
-            gridColumn="span 4"
-            gridRow="span 3"
-            backgroundColor={theme.palette.background.alt}
-            p="1.5rem"
-            borderRadius="0.55rem"
-          >
-            <Typography
-              variant="h3"
-              sx={{
-                color: theme.palette.secondary[100],
-                fontWeight: "bold",
-              }}
-            >
-              Your CO<sub>2</sub> Emissions This Month
-            </Typography>
-
-            <BreakdownChart
-              categories={data.carbonData.categories}
-              isDashboard={true}
-            />
-
-            <Typography
-              p="0 0.6rem"
-              fontSize="0.8rem"
-              sx={{ color: theme.palette.secondary[200] }}
-            >
-              Breakdown of carbon footprint by the category in which it was
-              generated.
-            </Typography>
-          </Box>
-        )}
-
-        {/* News */}
-        <Box
-          gridColumn="span 8"
-          gridRow="span 3"
-          backgroundColor={theme.palette.background.alt}
-          p="1rem"
-          borderRadius="0.55rem"
-        >
-          <NewsFeedDashboard />
-        </Box>
-
-        {/* Overview Chart */}
+        {/* NEWS */}
         <Box
           gridColumn="span 12"
           gridRow="span 3"
-          backgroundColor={theme.palette.background.alt}
-          p="1.5rem"
-          borderRadius="0.55rem"
+          sx={{ ...dashboardCardStyle, p: "2rem" }}
         >
-          <Typography variant="h3" fontWeight="bold">
-            Previous 12 Months CO<sub>2</sub> Emissions
+          <Typography variant="h6" fontWeight="bold" mb={2}>
+            Global Environment News
+          </Typography>
+
+          <NewsFeedDashboard />
+        </Box>
+
+        {/* OVERVIEW CHART */}
+        <Box
+          gridColumn="span 12"
+          gridRow="span 3"
+          sx={{ ...dashboardCardStyle, p: "2rem" }}
+        >
+          <Typography variant="h6" fontWeight="bold" mb={2}>
+            Previous 12 Months CO₂ Emissions
           </Typography>
 
           <OverviewChart isDashboard={false} />

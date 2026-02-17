@@ -1,155 +1,203 @@
 import React, { useState } from "react";
 import {
-	LightModeOutlined,
-	DarkModeOutlined,
-	Menu as MenuIcon,
-	Search,
-	ArrowDropDownOutlined,
+  LightModeOutlined,
+  DarkModeOutlined,
+  Menu as MenuIcon,
+  Search,
+  ArrowDropDownOutlined,
+  LogoutOutlined,
 } from "@mui/icons-material";
 import FlexBetween from "components/FlexBetween";
 import { useDispatch } from "react-redux";
 import { setMode } from "state";
 import { useGetUserQuery } from "state/api";
 import { removeCredentials } from "state/authSlice";
-// import { useLogoutMutation } from "state/api";
 
 import {
-	AppBar,
-	Button,
-	Box,
-	Typography,
-	IconButton,
-	InputBase,
-	Toolbar,
-	Menu,
-	MenuItem,
-	useTheme,
+  AppBar,
+  Button,
+  Box,
+  Typography,
+  IconButton,
+  InputBase,
+  Toolbar,
+  Menu,
+  MenuItem,
+  useTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
-	const dispatch = useDispatch();
-	const theme = useTheme();
+  const dispatch = useDispatch();
+  const theme = useTheme();
+  const navigate = useNavigate();
 
-	const [anchorEl, setAnchorEl] = useState(null);
-	const isOpen = Boolean(anchorEl);
-	const handleClick = (event) => setAnchorEl(event.currentTarget);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const isOpen = Boolean(anchorEl);
 
-	const { data: userInfo, isLoading } = useGetUserQuery();
-	const user = userInfo?.user;
-	const navigate = useNavigate();
+  const handleClick = (event) => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
 
-	// const [logoutApiCall] = useLogoutMutation();
+  const { data: userInfo, isLoading } = useGetUserQuery();
+  const user = userInfo?.user;
 
-	const logoutHandler = async () => {
-		try {
-			// await logoutApiCall().unwrap();
-			dispatch(removeCredentials());
-			navigate("/login");
-		} catch (error) {
-			console.log(error);
-			// toast.error("Coudn't log you out. Try again!");
-		}
-		setAnchorEl(null);
-	};
+  const logoutHandler = async () => {
+    dispatch(removeCredentials());
+    navigate("/login");
+    setAnchorEl(null);
+  };
 
-	return (
-		<AppBar
-			sx={{
-				position: "static",
-				background: "none",
-				boxShadow: "none",
-			}}
-		>
-			<Toolbar sx={{ justifyContent: "space-between" }}>
-				{/* Left Side */}
-				<FlexBetween>
-					<IconButton
-						onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-						sx={{ marginRight: "1rem" }}
-					>
-						<MenuIcon />
-					</IconButton>
-					<FlexBetween
-						backgroundColor={theme.palette.background.alt}
-						borderRadius="9px"
-						gap="3px"
-						p="0.1rem 1.5rem"
-					>
-						<InputBase placeholder="Search..." />
-						<IconButton>
-							<Search />
-						</IconButton>
-					</FlexBetween>
-				</FlexBetween>
+  return (
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{
+        backdropFilter: "blur(12px)",
+        background: "rgba(15, 32, 39, 0.7)",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+      }}
+    >
+      <Toolbar sx={{ justifyContent: "space-between", px: 3 }}>
+        {/* LEFT SIDE */}
+        <FlexBetween gap="1rem">
+          <IconButton
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            sx={{
+              color: "#fff",
+              "&:hover": { backgroundColor: "rgba(255,255,255,0.08)" },
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
 
-				{/* RIGHT SIDE */}
-				<FlexBetween gap="1.5rem">
-					<IconButton onClick={() => dispatch(setMode())}>
-						{theme.palette.mode === "dark" ? (
-							<DarkModeOutlined sx={{ fontSize: "25px" }} />
-						) : (
-							<LightModeOutlined sx={{ fontSize: "25px" }} />
-						)}
-					</IconButton>
-					{/* <IconButton>
-						<SettingsOutlined sx={{ fontSize: "25px" }} />
-					</IconButton> */}
+          {/* Modern Search Bar */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "rgba(255,255,255,0.08)",
+              borderRadius: "12px",
+              px: 2,
+              py: 0.5,
+              width: "260px",
+              transition: "0.3s",
+              "&:hover": {
+                backgroundColor: "rgba(255,255,255,0.15)",
+              },
+            }}
+          >
+            <Search sx={{ opacity: 0.6, mr: 1 }} />
+            <InputBase
+              placeholder="Search analytics..."
+              sx={{
+                color: "#fff",
+                fontSize: "0.9rem",
+                width: "100%",
+              }}
+            />
+          </Box>
+        </FlexBetween>
 
-					<FlexBetween>
-						<Button
-							onClick={handleClick}
-							sx={{
-								display: "flex",
-								justifyContent: "space-between",
-								alignItems: "center",
-								textTransform: "none",
-								gap: "1rem",
-							}}
-						>
-							<Box
-								component="img"
-								alt="profile"
-								src={`profile.png`}
-								height="32px"
-								width="32px"
-								borderRadius="50%"
-								sx={{ objectFit: "cover" }}
-							/>
-							{!isLoading && (
-								<Box textAlign="left">
-									<Typography
-										fontWeight="bold"
-										fontSize="0.85rem"
-										sx={{ color: theme.palette.secondary[100] }}
-									>
-										{user?.fname}
-									</Typography>
-									<Typography
-										fontSize="0.75rem"
-										sx={{ color: theme.palette.secondary[200] }}
-									>
-										{user?.city}
-									</Typography>
-								</Box>
-							)}
-							<ArrowDropDownOutlined
-								sx={{ color: theme.palette.secondary[300], fontSize: "25px" }}
-							/>
-						</Button>
-						<Menu
-							anchorEl={anchorEl}
-							open={isOpen}
-							onClose={logoutHandler}
-							anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-						>
-							<MenuItem onClick={logoutHandler}>Log Out</MenuItem>
-						</Menu>
-					</FlexBetween>
-				</FlexBetween>
-			</Toolbar>
-		</AppBar>
-	);
+        {/* RIGHT SIDE */}
+        <FlexBetween gap="1.5rem">
+          {/* Dark Mode Toggle */}
+          <IconButton
+            onClick={() => dispatch(setMode())}
+            sx={{
+              color: "#fff",
+              "&:hover": { backgroundColor: "rgba(255,255,255,0.08)" },
+            }}
+          >
+            {theme.palette.mode === "dark" ? (
+              <DarkModeOutlined />
+            ) : (
+              <LightModeOutlined />
+            )}
+          </IconButton>
+
+          {/* PROFILE SECTION */}
+          <Button
+            onClick={handleClick}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              textTransform: "none",
+              gap: "0.8rem",
+              borderRadius: "12px",
+              px: 2,
+              py: 0.5,
+              backgroundColor: "rgba(255,255,255,0.05)",
+              "&:hover": {
+                backgroundColor: "rgba(255,255,255,0.12)",
+              },
+            }}
+          >
+            <Box
+              component="img"
+              src="profile.png"
+              alt="profile"
+              sx={{
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                objectFit: "cover",
+                border: "2px solid rgba(255,255,255,0.2)",
+              }}
+            />
+
+            {!isLoading && (
+              <Box textAlign="left">
+                <Typography
+                  fontWeight="bold"
+                  fontSize="0.85rem"
+                  sx={{ color: "#fff", lineHeight: 1.2 }}
+                >
+                  {user?.fname}
+                </Typography>
+                <Typography
+                  fontSize="0.7rem"
+                  sx={{ color: "#fff",opacity: 0.9, lineHeight: 1.2 }}
+                >
+                  {user?.city}
+                </Typography>
+              </Box>
+            )}
+
+            <ArrowDropDownOutlined sx={{ color: "#d82222ff" }} />
+          </Button>
+
+          {/* DROPDOWN MENU */}
+          <Menu
+            anchorEl={anchorEl}
+            open={isOpen}
+            onClose={handleClose}
+            PaperProps={{
+              sx: {
+                background: "#364a55ff",
+                color: "#dd2828ff",
+                borderRadius: 5,
+                mt: 1,
+                minWidth: 150,
+              },
+            }}
+          >
+            <MenuItem
+              onClick={logoutHandler}
+              sx={{
+                gap: 1,
+                "&:hover": {
+                  backgroundColor: "rgba(255,255,255,0.08)",
+                },
+              }}
+            >
+              <LogoutOutlined fontSize="small" />
+              Log Out
+            </MenuItem>
+          </Menu>
+        </FlexBetween>
+      </Toolbar>
+    </AppBar>
+  );
 };
 
 export default Navbar;
