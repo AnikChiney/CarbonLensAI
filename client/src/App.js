@@ -72,8 +72,6 @@ function App() {
 
             </Route>
           </Route>
-          {/* 🔥 Catch All Route */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </ThemeProvider>
     </BrowserRouter>
