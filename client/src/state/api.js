@@ -1,9 +1,11 @@
+// state/api.js
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // 🔥 Base Query with Dynamic Token Handling
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.REACT_APP_BASE_URL,
   prepareHeaders: (headers) => {
+    // Get token from localStorage
     const userInfo = JSON.parse(localStorage.getItem("userInfoEcoTrack"));
     const token = userInfo?.token;
 
@@ -13,6 +15,7 @@ const baseQuery = fetchBaseQuery({
 
     return headers;
   },
+  credentials: "include", // ✅ Important: send cookies along with requests
 });
 
 export const api = createApi({
@@ -196,5 +199,4 @@ export const {
   useGetWaterStatsQuery,
   useGetTwelveMonthWaterQuery,
   useSaveWaterDataMutation,
-
 } = api;
