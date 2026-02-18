@@ -32,23 +32,24 @@ const allowedOrigins = [
   "https://carbonlensai-1.onrender.com"     // deployed frontend
 ];
 
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
-    // allow requests with no origin (like Postman)
+    // allow requests with no origin (like Postman or server-to-server)
     if (!origin) return callback(null, true);
     if (!allowedOrigins.includes(origin)) {
-      const msg = "The CORS policy for this site does not allow access from the specified Origin.";
-      return callback(new Error(msg), false);
+      return callback(new Error("Not allowed by CORS"), false);
     }
     return callback(null, true);
   },
-  credentials: true, // allow cookies
+  credentials: true, // allow cookies / Authorization headers
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
 
 // -------------------- HANDLE PRE-FLIGHT OPTIONS -------------------- //
-app.options("*", cors()); // allow OPTIONS requests for all routes
+app.options("*", cors(corsOptions)); // important for POST/PUT from frontend
 
 // -------------------- ROUTES -------------------- //
 app.use("/", generalRouter);
