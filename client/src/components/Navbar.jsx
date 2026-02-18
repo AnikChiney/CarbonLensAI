@@ -8,9 +8,8 @@ import {
   LogoutOutlined,
 } from "@mui/icons-material";
 import FlexBetween from "components/FlexBetween";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setMode } from "state";
-import { useGetUserQuery } from "state/api";
 import { removeCredentials } from "state/authSlice";
 
 import {
@@ -38,10 +37,15 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
-  const { data: userInfo, isLoading } = useGetUserQuery();
-  const user = userInfo?.user;
+  // ✅ Get user directly from Redux (persisted via localStorage)
+  const { userInfo } = useSelector((state) => state.auth);
 
-  const logoutHandler = async () => {
+  // Handles both:
+  // { name: "Shuvam" }
+  // { user: { name: "Shuvam" } }
+  const user = userInfo?.user || userInfo;
+
+  const logoutHandler = () => {
     dispatch(removeCredentials());
     navigate("/login");
     setAnchorEl(null);
@@ -70,7 +74,7 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
             <MenuIcon />
           </IconButton>
 
-          {/* Modern Search Bar */}
+          {/* Search */}
           <Box
             sx={{
               display: "flex",
@@ -145,23 +149,22 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
               }}
             />
 
-            {!isLoading && (
-              <Box textAlign="left">
-                <Typography
-                  fontWeight="bold"
-                  fontSize="0.85rem"
-                  sx={{ color: "#fff", lineHeight: 1.2 }}
-                >
-                  {user?.fname}
-                </Typography>
-                <Typography
-                  fontSize="0.7rem"
-                  sx={{ color: "#fff",opacity: 0.9, lineHeight: 1.2 }}
-                >
-                  {user?.city}
-                </Typography>
-              </Box>
-            )}
+            <Box textAlign="left">
+              <Typography
+                fontWeight="bold"
+                fontSize="0.85rem"
+                sx={{ color: "#fff", lineHeight: 1.2 }}
+              >
+                {user?.fname || user?.name || "User"}
+              </Typography>
+
+              <Typography
+                fontSize="0.7rem"
+                sx={{ color: "#fff", opacity: 0.9, lineHeight: 1.2 }}
+              >
+                {user?.city || user?.email || ""}
+              </Typography>
+            </Box>
 
             <ArrowDropDownOutlined sx={{ color: "#d82222ff" }} />
           </Button>
