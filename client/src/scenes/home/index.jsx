@@ -196,18 +196,17 @@ export default function Home() {
           {/* Individual */}
           <Grid item xs={12} md={4}>
             <Card
-              onClick={() =>
-                window.open(
-                  "https://onlinecourses.nptel.ac.in/noc26_cs84/unit?unit=104&lesson=111",
-                  "_blank"
-                )
-              }
+              component="a"
+              href="https://onlinecourses.nptel.ac.in/noc26_cs84/unit?unit=104&lesson=111"
+              target="_blank"
+              rel="noopener noreferrer"
               sx={{
                 textAlign: "center",
                 p: 5,
                 borderRadius: 4,
                 cursor: "pointer",
                 transition: "0.3s",
+                textDecoration: "none",
                 "&:hover": {
                   transform: "translateY(-8px)",
                   boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
