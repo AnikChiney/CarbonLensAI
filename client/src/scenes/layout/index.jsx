@@ -1,33 +1,43 @@
 import React, { useState } from "react";
 import { Box, useMediaQuery } from "@mui/material";
-import { Outlet } from "react-router-dom"; //this allows us to have the template layouts.
+import { Outlet } from "react-router-dom";
 import Navbar from "components/Navbar";
 import Sidebar from "components/Sidebar";
 
 const Layout = () => {
-	const isNonMobile = useMediaQuery("(min-width: 600px)");
-	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-	// const userId = useSelector((state) => state.global.userId);
+  const isNonMobile = useMediaQuery("(min-width: 600px)");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const drawerWidth = 250; // match Sidebar width
 
-	return (
-		<Box display={isNonMobile ? "flex" : "block"} width="100%" height="100%">
-			<Sidebar
-				isNonMobile={isNonMobile}
-				drawerWidth="250px"
-				isSidebarOpen={isSidebarOpen}
-				setIsSidebarOpen={setIsSidebarOpen}
-			/>
-			<Box flexGrow={1}>
-				{" "}
-				{/* flexGrow = 1 lets it take as much space as it could.*/}
-				<Navbar
-					isSidebarOpen={isSidebarOpen}
-					setIsSidebarOpen={setIsSidebarOpen}
-				/>
-				<Outlet />
-			</Box>
-		</Box>
-	);
+  return (
+    <Box display={isNonMobile ? "flex" : "block"} width="100%" height="100%">
+      {/* Sidebar */}
+      <Sidebar
+        isNonMobile={isNonMobile}
+        drawerWidth={drawerWidth}
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+      />
+
+      {/* Main content */}
+      <Box
+        flexGrow={1}
+        sx={{
+          width: isSidebarOpen && isNonMobile ? `calc(100% - ${drawerWidth}px)` : "100%",
+          transition: "width 0.3s ease",
+          minHeight: "100vh",
+        }}
+      >
+        <Navbar
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+        />
+        <Box p={3}>
+          <Outlet />
+        </Box>
+      </Box>
+    </Box>
+  );
 };
 
 export default Layout;
