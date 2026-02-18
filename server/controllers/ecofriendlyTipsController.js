@@ -1,7 +1,7 @@
 //ALL CONTROLLERS ARE PROTECTED.
 
 import asyncHandler from "../middleware/asyncHandler.js";
-import EcofriendlyTip from "../models/ecofriendlyTip.js";
+import EcofriendlyTip from "../models/EcofriendlyTip.js";
 
 const ecofriendlyTipsTest = asyncHandler(async (req, res) => {
 	res.status(200).json({ message: "ROUTE /eco-tips/test IS WORKING" });
