@@ -10,7 +10,7 @@ const WeatherInfo = ({ city }) => {
 
 	useEffect(() => {
 		const fetchWeatherData = async () => {
-			const apiKey = "54c2582d942cb5184bc315d6d70123e4";
+			const apiKey = "72e8652e41454d7655e44822f14c06a8";
 			const lat = 22.5744;
 			const lon = 88.3629;
 			try {
