@@ -29,7 +29,7 @@ app.use(morgan("common"));
 // -------------------- CORS CONFIG -------------------- //
 const allowedOrigins = [
   "http://localhost:3000",                 // local frontend dev
-  "http://localhost:5173",                 // if using Vite
+  //"http://localhost:5173",                 // if using Vite
   "https://carbonlensai-1.onrender.com"    // deployed frontend URL
 ];
 
