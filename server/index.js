@@ -28,25 +28,27 @@ app.use(morgan("common"));
 
 // -------------------- CORS CONFIG -------------------- //
 const allowedOrigins = [
-  "http://localhost:3000",                 // local frontend dev
-  //"http://localhost:5173",                 // if using Vite
-  "https://carbonlensai-1.onrender.com"    // deployed frontend URL
+  "http://localhost:3000",                  // local frontend dev
+  "https://carbonlensai-1.onrender.com"     // deployed frontend
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
     // allow requests with no origin (like Postman)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = `The CORS policy for this site does not allow access from the specified Origin.`;
+    if (!allowedOrigins.includes(origin)) {
+      const msg = "The CORS policy for this site does not allow access from the specified Origin.";
       return callback(new Error(msg), false);
     }
     return callback(null, true);
   },
-  credentials: true,
+  credentials: true, // allow cookies
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
+// -------------------- HANDLE PRE-FLIGHT OPTIONS -------------------- //
+app.options("*", cors()); // allow OPTIONS requests for all routes
 
 // -------------------- ROUTES -------------------- //
 app.use("/", generalRouter);
