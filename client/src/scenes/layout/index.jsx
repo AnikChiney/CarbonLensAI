@@ -7,11 +7,10 @@ import Sidebar from "components/Sidebar";
 const Layout = () => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const drawerWidth = 250; // match Sidebar width
+  const drawerWidth = 250;
 
   return (
     <Box display={isNonMobile ? "flex" : "block"} width="100%" height="100%">
-      {/* Sidebar */}
       <Sidebar
         isNonMobile={isNonMobile}
         drawerWidth={drawerWidth}
@@ -19,12 +18,15 @@ const Layout = () => {
         setIsSidebarOpen={setIsSidebarOpen}
       />
 
-      {/* Main content */}
       <Box
-        flexGrow={1}
+        component="main"
         sx={{
-          width: isSidebarOpen && isNonMobile ? `calc(100% - ${drawerWidth}px)` : "100%",
-          transition: "width 0.3s ease",
+          flexGrow: 1,
+          // Use marginLeft to "push" the content when the sidebar is open
+          // and set it to 0 when closed so the content slides left
+          marginLeft: isNonMobile && isSidebarOpen ? 0 : `-${drawerWidth}px`,
+          transition: "margin 0.3s ease-in-out",
+          width: "100%",
           minHeight: "100vh",
         }}
       >
