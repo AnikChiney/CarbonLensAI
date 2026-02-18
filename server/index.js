@@ -1,4 +1,3 @@
-// server/index.js
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
@@ -10,7 +9,8 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 
 import connectDB from "./config/db.js";
-import { generalRouter } from "./routes/main.js";
+import authRoutes from "./routes/auth.js"; // auth routes
+// import other routers if you have them
 
 // -------------------- CONFIGURATION -------------------- //
 const app = express();
@@ -20,36 +20,31 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-
-// Security headers
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
-
-// Logger
 app.use(morgan("common"));
 
 // -------------------- CORS CONFIG -------------------- //
+// Allow localhost for dev and deployed frontend
 const allowedOrigins = [
-  "http://localhost:3000",                // local frontend
-  "https://carbonlensai-1.onrender.com"   // deployed frontend
+  "http://localhost:3000",
+  "https://carbonlensai-1.onrender.com"
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // allow requests with no origin (like Postman or server-to-server)
-    if (!origin) return callback(null, true);
+    if (!origin) return callback(null, true); // allow server-to-server requests
     if (!allowedOrigins.includes(origin)) {
-      const msg = "The CORS policy for this site does not allow access from the specified Origin.";
-      return callback(new Error(msg), false);
+      return callback(new Error("CORS policy: Origin not allowed"), false);
     }
     return callback(null, true);
   },
-  credentials: true, // allow cookies
+  credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// -------------------- HANDLE PRE-FLIGHT OPTIONS -------------------- //
+// Handle preflight requests
 app.options("*", cors());
 
 // -------------------- ROOT ROUTE -------------------- //
@@ -58,7 +53,7 @@ app.get("/", (req, res) => {
 });
 
 // -------------------- API ROUTES -------------------- //
-app.use("/", generalRouter);
+app.use("/auth", authRoutes);
 
 // -------------------- DATABASE -------------------- //
 connectDB();
