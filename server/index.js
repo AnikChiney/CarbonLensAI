@@ -1,3 +1,4 @@
+// server/index.js
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
@@ -7,6 +8,7 @@ dotenv.config();
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+
 import connectDB from "./config/db.js";
 import { generalRouter } from "./routes/main.js";
 
@@ -28,30 +30,34 @@ app.use(morgan("common"));
 
 // -------------------- CORS CONFIG -------------------- //
 const allowedOrigins = [
-  "http://localhost:3000",                  // local frontend dev
-  "https://carbonlensai-1.onrender.com"     // deployed frontend
+  "http://localhost:3000",                // local frontend
+  "https://carbonlensai-1.onrender.com"   // deployed frontend
 ];
 
-const corsOptions = {
+app.use(cors({
   origin: function (origin, callback) {
     // allow requests with no origin (like Postman or server-to-server)
     if (!origin) return callback(null, true);
     if (!allowedOrigins.includes(origin)) {
-      return callback(new Error("Not allowed by CORS"), false);
+      const msg = "The CORS policy for this site does not allow access from the specified Origin.";
+      return callback(new Error(msg), false);
     }
     return callback(null, true);
   },
-  credentials: true, // allow cookies / Authorization headers
+  credentials: true, // allow cookies
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-
-app.use(cors(corsOptions));
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 // -------------------- HANDLE PRE-FLIGHT OPTIONS -------------------- //
-app.options("*", cors(corsOptions)); // important for POST/PUT from frontend
+app.options("*", cors());
 
-// -------------------- ROUTES -------------------- //
+// -------------------- ROOT ROUTE -------------------- //
+app.get("/", (req, res) => {
+  res.status(200).send("Backend is running!");
+});
+
+// -------------------- API ROUTES -------------------- //
 app.use("/", generalRouter);
 
 // -------------------- DATABASE -------------------- //
