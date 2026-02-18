@@ -1,86 +1,59 @@
 import mongoose from "mongoose";
-
 import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
-	{
-		fname: {
-			type: String,
-			required: true,
-		},
-		lname: {
-			type: String,
-			required: true,
-		},
-		phone: {
-			type: String,
-		},
-		email: {
-			type: String,
-			required: true,
-			unique: true,
-		},
-		password: {
-			type: String,
-			required: true,
-		},
-		image: {
-			type: String,
-			required: true,
-		},
-		city: {
-			type: String,
-			required: true,
-		},
-		country: {
-			type: String,
-			required: true,
-		},
-		carbonFootprint: [
-			{
-				year: Number,
-				month: Number,
-				categories: {
-					transport: Number,
-					electricity: Number,
-					others: Number,
-				},
-			},
-		],
-		waterUsage: [
-			{
-				year: Number,
-				month: Number,
-				categories: {
-					drinking: Number, // in liters
-					cooking: Number, // in liters
-					bathing: Number, // in liters
-					clothWashing: Number, // in liters
-					utensilsWashing: Number, // in liters
-					houseWashing: Number, // in liters
-					waterClosetsFlushing: Number, // in liters
-					others: Number, // in liters
-				},
-			},
-		],
-	},
-	{
-		timestamps: true,
-	}
+  {
+    fname: { type: String, required: true },
+    lname: { type: String, required: true },
+    phone: { type: String },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    image: { type: String, required: true },
+    city: { type: String, required: true },
+    country: { type: String, required: true },
+    carbonFootprint: [
+      {
+        year: Number,
+        month: Number,
+        categories: {
+          transport: Number,
+          electricity: Number,
+          others: Number,
+        },
+      },
+    ],
+    waterUsage: [
+      {
+        year: Number,
+        month: Number,
+        categories: {
+          drinking: Number,
+          cooking: Number,
+          bathing: Number,
+          clothWashing: Number,
+          utensilsWashing: Number,
+          houseWashing: Number,
+          waterClosetsFlushing: Number,
+          others: Number,
+        },
+      },
+    ],
+  },
+  { timestamps: true }
 );
 
-userSchema.methods.matchPassword = async function (enteredPasseword) {
-	return await bcrypt.compare(enteredPasseword, this.password);
+// 🔹 Compare entered password with hashed password
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Encrypt password using bcrypt
+// 🔹 Hash password before saving
 userSchema.pre("save", async function (next) {
-	if (!this.isModified("password")) {
-		next();
-	}
-
-	const salt = await bcrypt.genSalt(10);
-	this.password = await bcrypt.hash(this.password, salt);
+  if (!this.isModified("password")) {
+    return next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
 });
 
 const User = mongoose.model("User", userSchema);
