@@ -36,26 +36,6 @@ export default function Home() {
           overflow: "hidden",
         }}
       >
-        {/* Subtle Glow Effect */}
-        <Box
-          sx={{
-            position: "absolute",
-            width: 400,
-            height: 400,
-            background: "rgba(0, 255, 170, 0.15)",
-            borderRadius: "50%",
-            filter: "blur(120px)",
-            top: -100,
-            right: -100,
-            animation: "pulse 6s infinite ease-in-out",
-            "@keyframes pulse": {
-              "0%": { transform: "scale(1)" },
-              "50%": { transform: "scale(1.2)" },
-              "100%": { transform: "scale(1)" },
-            },
-          }}
-        />
-
         <Container maxWidth="md" sx={{ position: "relative", zIndex: 2 }}>
           <Fade in timeout={800}>
             <Typography
@@ -119,7 +99,6 @@ export default function Home() {
             </Box>
           </Fade>
 
-          {/* Delayed Brand Reveal */}
           {showBrand && (
             <Fade in timeout={1000}>
               <Typography
@@ -130,7 +109,7 @@ export default function Home() {
                   opacity: 0.6,
                 }}
               >
-               Powered by<b><i> CarbonLens AI</i> </b> 
+                Powered by <b><i>CarbonLens AI</i></b>
               </Typography>
             </Fade>
           )}
@@ -199,6 +178,81 @@ export default function Home() {
               </Card>
             </Grid>
           ))}
+        </Grid>
+      </Container>
+
+      {/* USER TYPE SELECTION */}
+      <Container sx={{ py: 10 }}>
+        <Typography
+          variant="h4"
+          align="center"
+          fontWeight="bold"
+          gutterBottom
+        >
+          Choose Your Dashboard
+        </Typography>
+
+        <Grid container spacing={4} justifyContent="center" sx={{ mt: 4 }}>
+          {/* Individual */}
+          <Grid item xs={12} md={4}>
+            <Card
+              onClick={() =>
+                window.open(
+                  "https://onlinecourses.nptel.ac.in/noc26_cs84/unit?unit=104&lesson=111",
+                  "_blank"
+                )
+              }
+              sx={{
+                textAlign: "center",
+                p: 5,
+                borderRadius: 4,
+                cursor: "pointer",
+                transition: "0.3s",
+                "&:hover": {
+                  transform: "translateY(-8px)",
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+                },
+              }}
+            >
+              <CardContent>
+                <Typography variant="h6" fontWeight="bold" gutterBottom>
+                  Individual
+                </Typography>
+                <Typography>
+                  Track personal carbon footprint and lifestyle impact.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Industrial */}
+          <Grid item xs={12} md={4}>
+            <Card
+              onClick={() =>
+                window.open("https://your-industrial-site.com", "_blank")
+              }
+              sx={{
+                textAlign: "center",
+                p: 5,
+                borderRadius: 4,
+                cursor: "pointer",
+                transition: "0.3s",
+                "&:hover": {
+                  transform: "translateY(-8px)",
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+                },
+              }}
+            >
+              <CardContent>
+                <Typography variant="h6" fontWeight="bold" gutterBottom>
+                  Industrial
+                </Typography>
+                <Typography>
+                  Monitor enterprise emissions and supply chain impact.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
       </Container>
 
