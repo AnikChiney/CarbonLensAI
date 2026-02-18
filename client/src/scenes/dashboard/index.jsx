@@ -179,16 +179,10 @@ const Dashboard = () => {
         >
           <OverviewBox
             title="Carbon Footprint (KGs CO2)"
-            value={parseInt(data?.totalCarbonByPerson || 0)}
-            transport={parseInt(
-              data?.carbonData?.categories?.transport || 0
-            )}
-            electricity={parseInt(
-              data?.carbonData?.categories?.electricity || 0
-            )}
-            others={parseInt(
-              data?.carbonData?.categories?.others || 0
-            )}
+            value={3262}
+            transport={1728}
+            electricity={984}
+            others={150}
             icon={<Co2 sx={{ color: "#00ffaa", fontSize: 28 }} />}
             rowSpan={2}
             colSpan={4}
