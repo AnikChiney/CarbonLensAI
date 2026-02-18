@@ -17,48 +17,41 @@ const NewsFeedDashboard = () => {
 			<Typography marginTop="0.5rem" fontWeight="bold" variant="h2">
 				Global Environment News
 			</Typography>
-			<Box
-				mt="40px"
-				height="26.5rem"
-				overflow="auto" // Enable scrolling
-				sx={{
-					"&::-webkit-scrollbar": {
-						width: "6px",
-					},
-					"&::-webkit-scrollbar-track": {
-						background: theme.palette.background.default,
-					},
-					"&::-webkit-scrollbar-thumb": {
-						background: theme.palette.secondary.main,
-						borderRadius: "3px",
-					},
-				}}
-			>
-				{isLoading || !data ? (
-					<Box sx={{ width: "60%", margin: "2rem 0 2rem 0.2rem" }}>
-						<p
-							style={{
-								color: `${theme.palette.secondary[500]}`,
-							}}
-						>
-							LOADING...
-						</p>
-						<LinearProgress />
-					</Box>
-				) : (
-					data.articles.map((article, index) => (
-						<NewsFeedCard
-							key={index} // Add a unique key for each card
-							title={article.title}
-							content={article.description}
-							image={article.urlToImage}
-							source={article.source.name}
-							publishedAt={article.publishedAt}
-							url={article.url}
-						/>
-					))
-				)}
-			</Box>
+			<Box mt="40px" height="26.5rem" overflow="auto">
+  {data?.articles?.length > 0 ? (
+    data.articles.slice(0, 2).map((article, index) => (
+      <NewsFeedCard
+        key={index}
+        title={article.title}
+        content={article.description}
+        image={article.urlToImage}
+        source={article.source.name}
+        publishedAt={article.publishedAt}
+        url={article.url}
+      />
+    ))
+  ) : (
+    <>
+      <NewsFeedCard
+        title="🌍 Environmental Updates"
+        content="Latest global environmental news will appear here shortly."
+        image={null}
+        source="CarbonLens AI"
+        publishedAt={new Date().toISOString()}
+        url="#"
+      />
+      <NewsFeedCard
+        title="♻ Sustainability Matters"
+        content="Stay tuned for climate and sustainability updates."
+        image={null}
+        source="CarbonLens AI"
+        publishedAt={new Date().toISOString()}
+        url="#"
+      />
+    </>
+  )}
+</Box>
+
 		</>
 	);
 };
