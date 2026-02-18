@@ -11,8 +11,8 @@ const WeatherInfo = ({ city }) => {
 	useEffect(() => {
 		const fetchWeatherData = async () => {
 			const apiKey = "54c2582d942cb5184bc315d6d70123e4";
-			const lat = 25.4358;
-			const lon = 81.8463;
+			const lat = 22.5744;
+			const lon = 88.3629;
 			try {
 				const response = await axios.get(
 					`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
