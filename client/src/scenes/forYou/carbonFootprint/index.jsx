@@ -26,6 +26,7 @@ const CarbonFootprint = () => {
     month: currentMonth,
   });
 
+  // ✅ Fallback data (prevents blank UI)
   const fallbackData = {
     isGood: true,
     percentageIncDec: 10,
@@ -41,25 +42,36 @@ const CarbonFootprint = () => {
 
   const safeData = data || fallbackData;
 
+  // ✅ Shared Card Style
+  const cardStyle = {
+    backgroundColor: theme.palette.background.alt,
+    borderRadius: "1rem",
+    padding: "1.6rem",
+    boxShadow: "0 6px 24px rgba(0,0,0,0.25)",
+  };
+
   return (
     <Box m="1.5rem 2.5rem">
-      <FlexBetween>
+      {/* HEADER */}
+      <FlexBetween mb="0.5rem">
         <Header
           title="Carbon Footprint"
           subtitle="How Much Carbon Are You Really Emitting? Uncover Your Impact Now!"
         />
       </FlexBetween>
 
+      {/* LOADING */}
       {isLoading && (
         <Typography mt="1rem">Loading Carbon Insights...</Typography>
       )}
 
+      {/* GRID */}
       <Box
         mt="20px"
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
-        gridAutoRows="160px"
-        gap="30px"
+        gridAutoRows="190px"   // ✅ increased for better spacing
+        gap="26px"
         sx={{
           "& > div": {
             gridColumn: isNonMediumScreens ? undefined : "span 12",
@@ -67,10 +79,14 @@ const CarbonFootprint = () => {
         }}
       >
         {/* IMAGE */}
-        <Box gridColumn="span 4" gridRow="span 2" p="1rem">
+        <Box gridColumn="span 4" gridRow="span 2" sx={cardStyle}>
           <Box
             component="img"
-            sx={{ height: 330, width: 330 }}
+            sx={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+            }}
             alt="status"
             src={safeData.isGood ? "/well-done.png" : "/sad.svg"}
           />
@@ -80,10 +96,12 @@ const CarbonFootprint = () => {
         <Box
           gridColumn="span 8"
           gridRow="span 2"
-          p="1rem"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
+          sx={{
+            ...cardStyle,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
         >
           <Typography variant="h5" fontWeight="bold">
             Your current CO₂ emissions are
@@ -92,14 +110,14 @@ const CarbonFootprint = () => {
           <Typography
             variant="h1"
             sx={{
-              fontSize: 96,
+              fontSize: 92,
               fontWeight: "bold",
-              lineHeight: 1.1,
+              lineHeight: 1.05,
               color: safeData.isGood ? "#00C853" : "#D50000",
             }}
           >
             {parseInt(safeData.percentageIncDec || 0)}%
-            <span style={{ fontSize: 40 }}>
+            <span style={{ fontSize: 38 }}>
               {safeData.isGood ? " LESS" : " MORE"}
             </span>
           </Typography>
@@ -137,35 +155,23 @@ const CarbonFootprint = () => {
         </Box>
 
         {/* TREND CHART */}
-        <Box
-          gridColumn="span 12"
-          gridRow="span 2"
-          p="1.5rem"
-          borderRadius="0.8rem"
-        >
-          <Typography variant="h5" fontWeight="bold" mb="1rem">
+        <Box gridColumn="span 12" gridRow="span 3" sx={cardStyle}>
+          <Typography variant="h4" fontWeight="bold" mb="1rem">
             12-Month Emission Trend
           </Typography>
-        
-          <Box sx={{ height: "260px" }}>
+
+          <Box sx={{ height: "340px" }}>
             <OverviewChart isDashboard={true} />
           </Box>
         </Box>
 
-
         {/* BREAKDOWN CHART */}
-        <Box
-          gridColumn="span 12"
-          gridRow="span 2.5"
-          backgroundColor={theme.palette.background.alt}
-          p="1.5rem"
-          borderRadius="0.8rem"
-        >
-          <Typography variant="h5" fontWeight="bold" mb="1rem">
+        <Box gridColumn="span 12" gridRow="span 3" sx={cardStyle}>
+          <Typography variant="h4" fontWeight="bold" mb="1rem">
             Emissions by Category
           </Typography>
-        
-          <Box sx={{ height: "200px" }}>
+
+          <Box sx={{ height: "340px" }}>
             <BreakdownChart
               categories={safeData.carbonData.categories}
               isDashboard={true}
@@ -173,23 +179,25 @@ const CarbonFootprint = () => {
           </Box>
         </Box>
 
-
         {/* AWARENESS PANEL */}
         <Box
           gridColumn="span 12"
           gridRow="span 2"
-          background="linear-gradient(135deg, rgba(0,255,170,0.08), rgba(0,198,255,0.08))"
-          p="2rem"
-          borderRadius="1rem"
-          boxShadow="0 6px 24px rgba(0,0,0,0.25)"
+          sx={{
+            borderRadius: "1.2rem",
+            padding: "2rem",
+            background:
+              "linear-gradient(135deg, rgba(0,255,170,0.08), rgba(0,198,255,0.08))",
+            boxShadow: "0 6px 28px rgba(0,0,0,0.25)",
+          }}
         >
           <Typography variant="h4" fontWeight="bold" mb="1rem">
             Why Reducing Carbon Emissions Matters 🌍
           </Typography>
 
-          <Typography variant="h6" sx={{ opacity: 0.75 }} mb="1.5rem">
-            Carbon emissions are a leading driver of climate change, affecting
-            ecosystems, economies, and human health.
+          <Typography variant="h6" sx={{ opacity: 0.75 }} mb="1.4rem">
+            Carbon emissions accelerate climate change, disrupting ecosystems,
+            economies, and human well-being.
           </Typography>
 
           <Box
@@ -197,10 +205,11 @@ const CarbonFootprint = () => {
             gridTemplateColumns={
               isNonMediumScreens ? "repeat(2, 1fr)" : "repeat(1, 1fr)"
             }
-            gap="32px"
+            gap="30px"
           >
+            {/* IMPACT */}
             <Box>
-              <Typography variant="h4" fontWeight="bold">
+              <Typography variant="h5" fontWeight="bold" mb="0.4rem">
                 Adverse Impacts on Society
               </Typography>
 
@@ -213,8 +222,9 @@ const CarbonFootprint = () => {
               </Typography>
             </Box>
 
+            {/* SOLUTIONS */}
             <Box>
-              <Typography variant="h4" fontWeight="bold">
+              <Typography variant="h5" fontWeight="bold" mb="0.4rem">
                 How You Can Reduce Emissions
               </Typography>
 
