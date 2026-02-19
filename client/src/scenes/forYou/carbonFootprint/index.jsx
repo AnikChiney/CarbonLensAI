@@ -201,8 +201,8 @@ const CarbonFootprint = () => {
             gap="32px"
           >
             <Box>
-              <Typography variant="h5" fontWeight="bold">
-                ⚠ Adverse Impacts on Society
+              <Typography variant="h4" fontWeight="bold">
+                Adverse Impacts on Society
               </Typography>
 
               <Typography sx={{ opacity: 0.75, lineHeight: 1.8 }}>
@@ -215,8 +215,8 @@ const CarbonFootprint = () => {
             </Box>
 
             <Box>
-              <Typography variant="h5" fontWeight="bold">
-                ✅ How You Can Reduce Emissions
+              <Typography variant="h4" fontWeight="bold">
+                How You Can Reduce Emissions
               </Typography>
 
               <Typography sx={{ opacity: 0.75, lineHeight: 1.8 }}>
