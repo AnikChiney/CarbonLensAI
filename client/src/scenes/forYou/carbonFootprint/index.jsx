@@ -53,18 +53,6 @@ const CarbonFootprint = () => {
           subtitle="How Much Carbon Are You Really Emitting? Uncover Your Impact Now!"
         />
 
-        <Button
-          sx={{
-            backgroundColor: theme.palette.secondary.light,
-            color: theme.palette.background.alt,
-            fontSize: "14px",
-            fontWeight: "bold",
-            padding: "10px 20px",
-          }}
-        >
-          <DownloadOutlined sx={{ mr: "10px" }} />
-          COMING SOON
-        </Button>
       </FlexBetween>
 
       {/* ✅ Loading indicator */}
@@ -137,7 +125,7 @@ const CarbonFootprint = () => {
           {/* ✅ Demo data indicator */}
           {!data && (
             <Typography color="orange" fontSize="0.9rem">
-              Showing demo data (API unavailable)
+              Showing demo data 
             </Typography>
           )}
         </Box>
@@ -163,7 +151,7 @@ const CarbonFootprint = () => {
         </Box>
 
         {/* TREND CHART */}
-        <Box
+        <Box sx={{ height: "220px" }
           gridColumn="span 8"
           gridRow="span 2"
           backgroundColor={theme.palette.background.alt}
@@ -198,8 +186,57 @@ const CarbonFootprint = () => {
           </Typography>
         </Box>
 
-        <CarbonFootprintByMonth />
-        <CarbonSaveForm />
+		  <Box
+  gridColumn="span 12"
+  gridRow="span 2"
+  backgroundColor={theme.palette.background.alt}
+  p="1.5rem"
+  borderRadius="0.55rem"
+>
+  <Typography variant="h5" fontWeight="bold" mb="0.8rem">
+    Why Reducing Carbon Emissions Matters 🌍
+  </Typography>
+
+  <Typography variant="body1" sx={{ opacity: 0.85 }} mb="1rem">
+    Carbon emissions are one of the leading contributors to climate change,
+    impacting ecosystems, economies, and human health worldwide.
+  </Typography>
+
+  <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap="20px">
+    
+    {/* IMPACT */}
+    <Box>
+      <Typography variant="h6" fontWeight="bold" mb="0.4rem">
+        ⚠ Adverse Impacts on Society
+      </Typography>
+
+      <Typography variant="body2" sx={{ opacity: 0.75 }}>
+        • Increased global warming & extreme weather events<br />
+        • Rising sea levels affecting coastal communities<br />
+        • Health risks due to air pollution<br />
+        • Food & water security challenges<br />
+        • Economic losses from climate disasters
+      </Typography>
+    </Box>
+
+    {/* SOLUTIONS */}
+    <Box>
+      <Typography variant="h6" fontWeight="bold" mb="0.4rem">
+        ✅ How You Can Reduce Emissions
+      </Typography>
+
+      <Typography variant="body2" sx={{ opacity: 0.75 }}>
+        • Use public transport / carpool / EVs<br />
+        • Reduce electricity consumption<br />
+        • Switch to renewable energy sources<br />
+        • Minimize waste & recycle<br />
+        • Adopt sustainable lifestyle choices
+      </Typography>
+    </Box>
+  </Box>
+</Box>
+
+
       </Box>
     </Box>
   );
