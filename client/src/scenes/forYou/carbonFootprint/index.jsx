@@ -150,7 +150,7 @@ const CarbonFootprint = () => {
             12-Month Emission Trend
           </Typography>
 
-          <Box sx={{ height: "220px" }}>
+          <Box >
             <OverviewChart isDashboard={true} />
           </Box>
         </Box>
@@ -202,11 +202,11 @@ const CarbonFootprint = () => {
             gap="20px"
           >
             <Box>
-              <Typography variant="h6" fontWeight="bold">
+              <Typography variant="h3" fontWeight="bold">
                 ⚠ Adverse Impacts on Society
               </Typography>
 
-              <Typography variant="body2" sx={{ opacity: 0.75 }}>
+              <Typography variant="h4" sx={{ opacity: 0.75 }}>
                 • Increased global warming & extreme weather events<br />
                 • Rising sea levels affecting coastal regions<br />
                 • Health risks from air pollution<br />
@@ -216,11 +216,11 @@ const CarbonFootprint = () => {
             </Box>
 
             <Box>
-              <Typography variant="h6" fontWeight="bold">
+              <Typography variant="h3" fontWeight="bold">
                 ✅ How You Can Reduce Emissions
               </Typography>
 
-              <Typography variant="body2" sx={{ opacity: 0.75 }}>
+              <Typography variant="h4" sx={{ opacity: 0.75 }}>
                 • Use public transport / EVs<br />
                 • Reduce electricity usage<br />
                 • Adopt renewable energy<br />
