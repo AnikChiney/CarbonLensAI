@@ -15,7 +15,8 @@ import OverviewBox from "components/OverviewBox";
 
 const CarbonFootprint = () => {
   const theme = useTheme();
-  const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
+  const isNonMediumScreens = useMediaQuery("(min-width:1200px)");
+
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;
   const currentYear = currentDate.getFullYear();
@@ -25,6 +26,7 @@ const CarbonFootprint = () => {
     month: currentMonth,
   });
 
+  // ✅ FALLBACK DATA (prevents blank UI)
   const fallbackData = {
     isGood: true,
     percentageIncDec: 10,
@@ -38,26 +40,43 @@ const CarbonFootprint = () => {
     },
   };
 
+  // ✅ SAFE DATA
   const safeData = data || fallbackData;
+
+  // ✅ SAFE NUMBERS (prevents NaN)
+  const percentage = parseInt(safeData?.percentageIncDec || 0);
+  const totalCarbon = parseInt(safeData?.totalCarbonByPerson || 0);
+  const transport = parseInt(
+    safeData?.carbonData?.categories?.transport || 0
+  );
+  const electricity = parseInt(
+    safeData?.carbonData?.categories?.electricity || 0
+  );
+  const others = parseInt(
+    safeData?.carbonData?.categories?.others || 0
+  );
 
   return (
     <Box m="1.5rem 2.5rem">
-      <FlexBetween>
+      {/* HEADER */}
+      <FlexBetween mb="0.3rem">
         <Header
           title="Carbon Footprint"
           subtitle="How Much Carbon Are You Really Emitting? Uncover Your Impact Now!"
         />
-      </FlexBetween> {/* ✅ FIXED */}
+      </FlexBetween>
 
+      {/* LOADING */}
       {isLoading && (
         <Typography mt="1rem">Loading Carbon Insights...</Typography>
       )}
 
+      {/* GRID */}
       <Box
         mt="20px"
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
-        gridAutoRows="170px"   {/* ✅ Slightly increased */}
+        gridAutoRows="170px"   // ✅ Stable row height
         gap="30px"
         sx={{
           "& > div": {
@@ -69,27 +88,29 @@ const CarbonFootprint = () => {
         <Box
           gridColumn="span 4"
           gridRow="span 2"
-          backgroundColor="transparent"
           p="1rem"
           borderRadius="0.55rem"
           display="flex"
           justifyContent="center"
+          alignItems="center"
         >
           <Box
             component="img"
-            sx={{ height: 320, width: 320, objectFit: "contain" }}
-            alt={safeData.isGood ? "Well Done" : "Try Harder"}
-            src={safeData.isGood ? "/well-done.png" : "/sad.svg"}
+            sx={{
+              height: 320,
+              width: 320,
+              objectFit: "contain",
+            }}
+            alt={safeData?.isGood ? "Well Done" : "Try Harder"}
+            src={safeData?.isGood ? "/well-done.png" : "/sad.svg"}
           />
         </Box>
 
-        {/* SUMMARY TEXT */}
+        {/* SUMMARY */}
         <Box
           gridColumn="span 8"
           gridRow="span 2"
-          backgroundColor="transparent"
           p="1rem"
-          borderRadius="0.55rem"
           display="flex"
           flexDirection="column"
           justifyContent="center"
@@ -103,12 +124,11 @@ const CarbonFootprint = () => {
             sx={{
               fontSize: 88,
               fontWeight: "bold",
-              color: safeData.isGood ? "#00C853" : "#D50000",
+              color: safeData?.isGood ? "#00C853" : "#D50000",
               lineHeight: 1.1,
             }}
           >
-            {parseInt(safeData.percentageIncDec || 0)}%
-            {safeData.isGood ? " LESS" : " MORE"}
+            {percentage}% {safeData?.isGood ? "LESS" : "MORE"}
           </Typography>
 
           <Typography variant="h6" sx={{ opacity: 0.75 }}>
@@ -122,7 +142,7 @@ const CarbonFootprint = () => {
           )}
         </Box>
 
-        {/* OVERVIEW BOX */}
+        {/* CURRENT MONTH */}
         <Box
           gridColumn="span 4"
           gridRow="span 2"
@@ -132,12 +152,17 @@ const CarbonFootprint = () => {
         >
           <OverviewBox
             title="Current Month (KGs CO2 Emitted)"
-            value={parseInt(safeData.totalCarbonByPerson || 0)}
-            transport={parseInt(safeData.carbonData.categories.transport || 0)}
-            electricity={parseInt(safeData.carbonData.categories.electricity || 0)}
-            others={parseInt(safeData.carbonData.categories.others || 0)}
+            value={totalCarbon}
+            transport={transport}
+            electricity={electricity}
+            others={others}
             icon={
-              <Co2 sx={{ color: theme.palette.secondary[300], fontSize: 26 }} />
+              <Co2
+                sx={{
+                  color: theme.palette.secondary[300],
+                  fontSize: 26,
+                }}
+              />
             }
           />
         </Box>
@@ -154,12 +179,13 @@ const CarbonFootprint = () => {
             12-Month Emission Trend
           </Typography>
 
-          <Box sx={{ height: "230px" }}> {/* ✅ Prevent overflow */}
+          {/* ✅ Height constraint prevents overflow */}
+          <Box sx={{ height: "230px" }}>
             <OverviewChart isDashboard={true} />
           </Box>
         </Box>
 
-        {/* BREAKDOWN CHART */}
+        {/* BREAKDOWN */}
         <Box
           gridColumn="span 12"
           gridRow="span 3"
@@ -171,9 +197,9 @@ const CarbonFootprint = () => {
             Emissions by Category
           </Typography>
 
-          <Box sx={{ height: "260px" }}> {/* ✅ Controlled height */}
+          <Box sx={{ height: "260px" }}>
             <BreakdownChart
-              categories={safeData.carbonData.categories}
+              categories={safeData?.carbonData?.categories}
               isDashboard={true}
             />
           </Box>
@@ -183,7 +209,7 @@ const CarbonFootprint = () => {
           </Typography>
         </Box>
 
-        {/* AWARENESS PANEL */}
+        {/* AWARENESS */}
         <Box
           gridColumn="span 12"
           gridRow="span 2"
@@ -216,7 +242,7 @@ const CarbonFootprint = () => {
                 • Extreme weather events<br />
                 • Rising sea levels<br />
                 • Health risks<br />
-                • Food & water insecurity<br />
+                • Resource insecurity<br />
                 • Economic losses
               </Typography>
             </Box>
