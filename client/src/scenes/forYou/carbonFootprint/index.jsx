@@ -13,6 +13,21 @@ import OverviewChart from "components/OverviewChart";
 import { useGetCarbonStatsQuery } from "state/api";
 import OverviewBox from "components/OverviewBox";
 
+import React from "react";
+import FlexBetween from "components/FlexBetween";
+import Header from "components/Header";
+import { Co2 } from "@mui/icons-material";
+import {
+  Box,
+  Typography,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
+import BreakdownChart from "components/BreakdownChart";
+import OverviewChart from "components/OverviewChart";
+import { useGetCarbonStatsQuery } from "state/api";
+import OverviewBox from "components/OverviewBox";
+
 const CarbonFootprint = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
@@ -26,7 +41,7 @@ const CarbonFootprint = () => {
     month: currentMonth,
   });
 
-  // ✅ Fallback data (prevents blank UI)
+  // ✅ Safe fallback
   const fallbackData = {
     isGood: true,
     percentageIncDec: 10,
@@ -42,7 +57,6 @@ const CarbonFootprint = () => {
 
   const safeData = data || fallbackData;
 
-  // ✅ Shared Card Style
   const cardStyle = {
     backgroundColor: theme.palette.background.alt,
     borderRadius: "1rem",
@@ -70,39 +84,21 @@ const CarbonFootprint = () => {
         mt="20px"
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
-        gridAutoRows="190px"   // ✅ increased for better spacing
+        gridAutoRows="220px"   // ✅ prevents overlap
         gap="26px"
-        sx={{
-          "& > div": {
-            gridColumn: isNonMediumScreens ? undefined : "span 12",
-          },
-        }}
       >
         {/* IMAGE */}
         <Box gridColumn="span 4" gridRow="span 2" sx={cardStyle}>
           <Box
             component="img"
-            sx={{
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-            }}
+            sx={{ width: "100%", height: "100%", objectFit: "contain" }}
             alt="status"
             src={safeData.isGood ? "/well-done.png" : "/sad.svg"}
           />
         </Box>
 
         {/* SUMMARY */}
-        <Box
-          gridColumn="span 8"
-          gridRow="span 2"
-          sx={{
-            ...cardStyle,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-          }}
-        >
+        <Box gridColumn="span 8" gridRow="span 2" sx={cardStyle}>
           <Typography variant="h5" fontWeight="bold">
             Your current CO₂ emissions are
           </Typography>
@@ -134,44 +130,37 @@ const CarbonFootprint = () => {
         </Box>
 
         {/* CURRENT MONTH */}
-        <Box gridColumn="span 12" gridRow="span 2">
+        <Box gridColumn="span 12" gridRow="span 1">
           <OverviewBox
             title="Current Month (KGs CO2 Emitted)"
             value={parseInt(safeData.totalCarbonByPerson || 0)}
             transport={parseInt(safeData.carbonData.categories.transport || 0)}
-            electricity={parseInt(
-              safeData.carbonData.categories.electricity || 0
-            )}
+            electricity={parseInt(safeData.carbonData.categories.electricity || 0)}
             others={parseInt(safeData.carbonData.categories.others || 0)}
             icon={
-              <Co2
-                sx={{
-                  color: theme.palette.secondary[300],
-                  fontSize: "26px",
-                }}
-              />
+              <Co2 sx={{ color: theme.palette.secondary[300], fontSize: 26 }} />
             }
           />
         </Box>
 
         {/* TREND CHART */}
-        <Box gridColumn="span 12" gridRow="span 3" sx={cardStyle}>
-          <Typography variant="h4" fontWeight="bold" mb="1rem">
+        <Box gridColumn="span 12" gridRow="span 2" sx={cardStyle}>
+          <Typography variant="h5" fontWeight="bold" mb="1rem">
             12-Month Emission Trend
           </Typography>
 
-          <Box sx={{ height: "340px" }}>
+          <Box sx={{ height: "300px" }}>
             <OverviewChart isDashboard={true} />
           </Box>
         </Box>
 
-        {/* BREAKDOWN CHART */}
-        <Box gridColumn="span 12" gridRow="span 3" sx={cardStyle}>
-          <Typography variant="h4" fontWeight="bold" mb="1rem">
+        {/* BREAKDOWN */}
+        <Box gridColumn="span 12" gridRow="span 2" sx={cardStyle}>
+          <Typography variant="h5" fontWeight="bold" mb="1rem">
             Emissions by Category
           </Typography>
 
-          <Box sx={{ height: "340px" }}>
+          <Box sx={{ height: "300px" }}>
             <BreakdownChart
               categories={safeData.carbonData.categories}
               isDashboard={true}
@@ -179,18 +168,14 @@ const CarbonFootprint = () => {
           </Box>
         </Box>
 
-        {/* AWARENESS PANEL */}
-        <Box
-          gridColumn="span 12"
-          gridRow="span 2"
-          sx={{
-            borderRadius: "1.2rem",
-            padding: "2rem",
-            background:
-              "linear-gradient(135deg, rgba(0,255,170,0.08), rgba(0,198,255,0.08))",
-            boxShadow: "0 6px 28px rgba(0,0,0,0.25)",
-          }}
-        >
+        {/* AWARENESS */}
+        <Box gridColumn="span 12" gridRow="span 2" sx={{
+          borderRadius: "1.2rem",
+          padding: "2rem",
+          background:
+            "linear-gradient(135deg, rgba(0,255,170,0.08), rgba(0,198,255,0.08))",
+          boxShadow: "0 6px 28px rgba(0,0,0,0.25)",
+        }}>
           <Typography variant="h4" fontWeight="bold" mb="1rem">
             Why Reducing Carbon Emissions Matters 🌍
           </Typography>
@@ -200,40 +185,35 @@ const CarbonFootprint = () => {
             economies, and human well-being.
           </Typography>
 
-          <Box
-            display="grid"
-            gridTemplateColumns={
-              isNonMediumScreens ? "repeat(2, 1fr)" : "repeat(1, 1fr)"
-            }
+          <Box display="grid"
+            gridTemplateColumns={isNonMediumScreens ? "repeat(2,1fr)" : "1fr"}
             gap="30px"
           >
-            {/* IMPACT */}
             <Box>
-              <Typography variant="h5" fontWeight="bold" mb="0.4rem">
+              <Typography variant="h5" fontWeight="bold">
                 Adverse Impacts on Society
               </Typography>
 
               <Typography sx={{ opacity: 0.75, lineHeight: 1.8 }}>
-                • Increased global warming & extreme weather events<br />
-                • Rising sea levels affecting coastal regions<br />
-                • Health risks from air pollution<br />
-                • Food & water insecurity<br />
-                • Economic losses from climate disasters
+                • Extreme weather events<br />
+                • Rising sea levels<br />
+                • Health risks<br />
+                • Resource insecurity<br />
+                • Economic losses
               </Typography>
             </Box>
 
-            {/* SOLUTIONS */}
             <Box>
-              <Typography variant="h5" fontWeight="bold" mb="0.4rem">
+              <Typography variant="h5" fontWeight="bold">
                 How You Can Reduce Emissions
               </Typography>
 
               <Typography sx={{ opacity: 0.75, lineHeight: 1.8 }}>
-                • Use public transport / EVs<br />
+                • Use EVs / public transport<br />
                 • Reduce electricity usage<br />
                 • Adopt renewable energy<br />
-                • Reduce waste & recycle<br />
-                • Practice sustainable living
+                • Reduce waste<br />
+                • Sustainable lifestyle
               </Typography>
             </Box>
           </Box>
