@@ -129,7 +129,7 @@ const Dashboard = () => {
 
           <Person sx={{ fontSize: 42, mb: 2, color: "#00ffaa" }} />
 
-          <Typography variant="h5" fontWeight="bold" mb={1}>
+          <Typography variant="h5" fontWeight="bold" fontSize={30} mb={3}>
             Individuals
           </Typography>
 
@@ -150,7 +150,7 @@ const Dashboard = () => {
 
           <Business sx={{ fontSize: 42, mb: 2, color: "#00c6ff" }} />
 
-          <Typography variant="h5" fontWeight="bold" mb={1}>
+          <Typography variant="h5" fontWeight="bold" fontSize={30} mb={3}>
             Industrial
           </Typography>
 
