@@ -16,7 +16,6 @@ import OverviewBox from "components/OverviewBox";
 const CarbonFootprint = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;
   const currentYear = currentDate.getFullYear();
@@ -41,35 +40,25 @@ const CarbonFootprint = () => {
 
   const safeData = data || fallbackData;
 
-  const cardStyle = {
-    backgroundColor: theme.palette.background.alt,
-    borderRadius: "1rem",
-    padding: "1.6rem",
-    boxShadow: "0 6px 24px rgba(0,0,0,0.25)",
-  };
-
   return (
     <Box m="1.5rem 2.5rem">
-      {/* HEADER */}
-      <FlexBetween mb="0.5rem">
+      <FlexBetween>
         <Header
           title="Carbon Footprint"
           subtitle="How Much Carbon Are You Really Emitting? Uncover Your Impact Now!"
         />
       </FlexBetween>
 
-      {/* LOADING */}
       {isLoading && (
         <Typography mt="1rem">Loading Carbon Insights...</Typography>
       )}
 
-      {/* GRID */}
       <Box
         mt="20px"
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
-        gridAutoRows="220px"   // ✅ prevents overlap
-        gap="26px"
+        gridAutoRows="160px"
+        gap="30px"
         sx={{
           "& > div": {
             gridColumn: isNonMediumScreens ? undefined : "span 12",
@@ -77,37 +66,41 @@ const CarbonFootprint = () => {
         }}
       >
         {/* IMAGE */}
-        <Box gridColumn="span 4" gridRow="span 2" sx={cardStyle}>
+        <Box gridColumn="span 4" gridRow="span 2" p="1rem">
           <Box
             component="img"
-            sx={{ width: "100%", height: "100%", objectFit: "contain" }}
+            sx={{ height: 330, width: 330 }}
             alt="status"
             src={safeData.isGood ? "/well-done.png" : "/sad.svg"}
           />
         </Box>
 
         {/* SUMMARY */}
-        <Box gridColumn="span 8" gridRow="span 2" sx={cardStyle}>
-          <Typography variant="h5" fontWeight="bold">
+        <Box
+          gridColumn="span 8"
+          gridRow="span 2"
+          p="1rem"
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+        >
+          <Typography variant="h4" fontWeight="bold">
             Your current CO₂ emissions are
           </Typography>
 
           <Typography
-            variant="h1"
+            variant="h2"
             sx={{
-              fontSize: 92,
+              fontSize: 90,
               fontWeight: "bold",
-              lineHeight: 1.05,
-              color: safeData.isGood ? "#00C853" : "#D50000",
+              color: safeData.isGood ? "green" : "red",
             }}
           >
             {parseInt(safeData.percentageIncDec || 0)}%
-            <span style={{ fontSize: 38 }}>
-              {safeData.isGood ? " LESS" : " MORE"}
-            </span>
+            {safeData.isGood ? " LESS" : " MORE"}
           </Typography>
 
-          <Typography variant="h6" sx={{ opacity: 0.7 }}>
+          <Typography variant="h6">
             than the standard values for a person.
           </Typography>
 
@@ -118,7 +111,7 @@ const CarbonFootprint = () => {
           )}
         </Box>
 
-        {/* CURRENT MONTH — LEFT */}
+        {/* OVERVIEW BOX */}
         <Box gridColumn="span 4" gridRow="span 2">
           <OverviewBox
             title="Current Month (KGs CO2 Emitted)"
@@ -129,87 +122,104 @@ const CarbonFootprint = () => {
             )}
             others={parseInt(safeData.carbonData.categories.others || 0)}
             icon={
-              <Co2 sx={{ color: theme.palette.secondary[300], fontSize: 26 }} />
+              <Co2
+                sx={{
+                  color: theme.palette.secondary[300],
+                  fontSize: "26px",
+                }}
+              />
             }
           />
         </Box>
 
-        {/* TREND CHART — RIGHT */}
-        <Box gridColumn="span 8" gridRow="span 2" sx={cardStyle}>
-          <Typography variant="h5" fontWeight="bold" mb="0.8rem">
+        {/* TREND CHART */}
+        <Box
+          gridColumn="span 8"
+          gridRow="span 2"
+          backgroundColor={theme.palette.background.alt}
+          p="1rem"
+          borderRadius="0.55rem"
+        >
+          <Typography variant="h6" mb="0.5rem">
             12-Month Emission Trend
           </Typography>
 
-          <Box sx={{ height: "280px" }}>
+          <Box sx={{ height: "220px" }}>
             <OverviewChart isDashboard={true} />
           </Box>
         </Box>
 
         {/* BREAKDOWN */}
-        <Box gridColumn="span 12" gridRow="span 2" sx={cardStyle}>
-          <Typography variant="h5" fontWeight="bold" mb="0.8rem">
+        <Box
+          gridColumn="span 12"
+          gridRow="span 3"
+          backgroundColor={theme.palette.background.alt}
+          p="1.5rem"
+          borderRadius="0.55rem"
+        >
+          <Typography variant="h6" mb="0.5rem">
             Emissions by Category
           </Typography>
 
-          <Box sx={{ height: "280px" }}>
-            <BreakdownChart
-              categories={safeData.carbonData.categories}
-              isDashboard={true}
-            />
-          </Box>
+          <BreakdownChart
+            categories={safeData.carbonData.categories}
+            isDashboard={true}
+          />
+
+          <Typography fontSize="0.85rem" sx={{ opacity: 0.7 }}>
+            Breakdown of carbon footprint by category.
+          </Typography>
         </Box>
 
-        {/* AWARENESS */}
+        {/* AWARENESS PANEL */}
         <Box
           gridColumn="span 12"
           gridRow="span 2"
-          sx={{
-            borderRadius: "1.2rem",
-            padding: "2rem",
-            background:
-              "linear-gradient(135deg, rgba(0,255,170,0.08), rgba(0,198,255,0.08))",
-            boxShadow: "0 6px 28px rgba(0,0,0,0.25)",
-          }}
+          backgroundColor={theme.palette.background.alt}
+          p="1.5rem"
+          borderRadius="0.55rem"
         >
-          <Typography variant="h4" fontWeight="bold" mb="1rem">
+          <Typography variant="h5" fontWeight="bold" mb="0.8rem">
             Why Reducing Carbon Emissions Matters 🌍
           </Typography>
 
-          <Typography variant="h6" sx={{ opacity: 0.75 }} mb="1.2rem">
-            Carbon emissions accelerate climate change, disrupting ecosystems,
-            economies, and human well-being.
+          <Typography sx={{ opacity: 0.85 }} mb="1rem">
+            Carbon emissions are a leading cause of climate change, affecting
+            ecosystems, economies, and human health globally.
           </Typography>
 
           <Box
             display="grid"
-            gridTemplateColumns={isNonMediumScreens ? "repeat(2,1fr)" : "1fr"}
-            gap="30px"
+            gridTemplateColumns={
+              isNonMediumScreens ? "repeat(2, 1fr)" : "repeat(1, 1fr)"
+            }
+            gap="20px"
           >
             <Box>
-              <Typography variant="h5" fontWeight="bold">
-                Adverse Impacts on Society
+              <Typography variant="h6" fontWeight="bold">
+                ⚠ Adverse Impacts on Society
               </Typography>
 
-              <Typography sx={{ opacity: 0.75, lineHeight: 1.8 }}>
-                • Extreme weather events<br />
-                • Rising sea levels<br />
-                • Health risks<br />
-                • Resource insecurity<br />
-                • Economic losses
+              <Typography variant="body2" sx={{ opacity: 0.75 }}>
+                • Increased global warming & extreme weather events<br />
+                • Rising sea levels affecting coastal regions<br />
+                • Health risks from air pollution<br />
+                • Food & water insecurity<br />
+                • Economic losses from climate disasters
               </Typography>
             </Box>
 
             <Box>
-              <Typography variant="h5" fontWeight="bold">
-                How You Can Reduce Emissions
+              <Typography variant="h6" fontWeight="bold">
+                ✅ How You Can Reduce Emissions
               </Typography>
 
-              <Typography sx={{ opacity: 0.75, lineHeight: 1.8 }}>
-                • Use EVs / public transport<br />
+              <Typography variant="body2" sx={{ opacity: 0.75 }}>
+                • Use public transport / EVs<br />
                 • Reduce electricity usage<br />
-                • Renewable energy<br />
-                • Reduce waste<br />
-                • Sustainable lifestyle
+                • Adopt renewable energy<br />
+                • Reduce waste & recycle<br />
+                • Practice sustainable living
               </Typography>
             </Box>
           </Box>
