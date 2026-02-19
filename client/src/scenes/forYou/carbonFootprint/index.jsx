@@ -143,16 +143,16 @@ const CarbonFootprint = () => {
           backgroundColor={theme.palette.background.alt}
           p="1.5rem"
           borderRadius="0.8rem"
-          boxShadow="0 4px 20px rgba(0,0,0,0.25)"
         >
           <Typography variant="h5" fontWeight="bold" mb="1rem">
             12-Month Emission Trend
           </Typography>
-
+        
           <Box sx={{ height: "260px" }}>
             <OverviewChart isDashboard={true} />
           </Box>
         </Box>
+
 
         {/* BREAKDOWN CHART */}
         <Box
@@ -161,12 +161,11 @@ const CarbonFootprint = () => {
           backgroundColor={theme.palette.background.alt}
           p="1.5rem"
           borderRadius="0.8rem"
-          boxShadow="0 4px 20px rgba(0,0,0,0.25)"
         >
           <Typography variant="h5" fontWeight="bold" mb="1rem">
             Emissions by Category
           </Typography>
-
+        
           <Box sx={{ height: "260px" }}>
             <BreakdownChart
               categories={safeData.carbonData.categories}
@@ -174,6 +173,7 @@ const CarbonFootprint = () => {
             />
           </Box>
         </Box>
+
 
         {/* AWARENESS PANEL */}
         <Box
