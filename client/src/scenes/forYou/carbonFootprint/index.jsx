@@ -134,7 +134,7 @@ const CarbonFootprint = () => {
         </Box>
 
         {/* CURRENT MONTH */}
-        <Box gridColumn="span 12" gridRow="span 1">
+        <Box gridColumn="span 12" gridRow="span 2">
           <OverviewBox
             title="Current Month (KGs CO2 Emitted)"
             value={parseInt(safeData.totalCarbonByPerson || 0)}
