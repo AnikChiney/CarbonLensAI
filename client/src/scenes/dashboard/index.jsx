@@ -123,7 +123,7 @@ const Dashboard = () => {
           gridColumn="span 6"
           gridRow="span 2"
           sx={{ ...dashboardCardStyle, p: "2rem", cursor: "pointer" }}
-          onClick={() => window.open("https://onlinecourses.nptel.ac.in/noc26_cs84/unit?unit=104&lesson=111", "_blank")}
+          onClick={() => window.open("https://onlinecourses.nptel.ac.in/noc26_cs84/unit?unit=104&lesson=111", "_self")} // akhne change korbi ("_self" dile oi tab ei open hbe r "_blank" dile onno tab e open hbe)
         >
           <Box sx={glowBorder} />
 
@@ -144,7 +144,7 @@ const Dashboard = () => {
           gridColumn="span 6"
           gridRow="span 2"
           sx={{ ...dashboardCardStyle, p: "2rem", cursor: "pointer" }}
-          onClick={() => window.open("https://onlinecourses.nptel.ac.in/noc26_cs84/unit?unit=104&lesson=111", "_blank")}
+          onClick={() => window.open("https://onlinecourses.nptel.ac.in/noc26_cs84/unit?unit=104&lesson=111", "_blank")} // akhne change korbi ("_self" dile oi tab ei open hbe r "_blank" dile onno tab e open hbe)
         >
           <Box sx={glowBorder} />
 
