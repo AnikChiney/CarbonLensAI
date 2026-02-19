@@ -39,7 +39,8 @@ const OverviewChart = ({ isDashboard = false }) => {
       xScale={{ type: "point" }}
       yScale={{ type: "linear", min: "auto", max: "auto" }}
       curve="catmullRom"
-      enableArea={isDashboard}
+      enableArea={false}
+
       areaOpacity={0.15}
       axisBottom={{
         tickSize: 5,
