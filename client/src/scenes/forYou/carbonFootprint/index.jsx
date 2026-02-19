@@ -148,7 +148,7 @@ const CarbonFootprint = () => {
             12-Month Emission Trend
           </Typography>
         
-          <Box sx={{ height: "260px" }}>
+          <Box sx={{ height: "290px" }}>
             <OverviewChart isDashboard={true} />
           </Box>
         </Box>
@@ -166,7 +166,7 @@ const CarbonFootprint = () => {
             Emissions by Category
           </Typography>
         
-          <Box sx={{ height: "260px" }}>
+          <Box sx={{ height: "200px" }}>
             <BreakdownChart
               categories={safeData.carbonData.categories}
               isDashboard={true}
