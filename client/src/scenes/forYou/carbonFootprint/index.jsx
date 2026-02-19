@@ -50,20 +50,6 @@ const CarbonFootprint = () => {
           subtitle="How Much Carbon Are You Really Emitting? Uncover Your Impact Now!"
         />
 
-        <Button
-          sx={{
-            backgroundColor: theme.palette.secondary.light,
-            color: theme.palette.background.alt,
-            fontSize: "14px",
-            fontWeight: "bold",
-            padding: "10px 20px",
-          }}
-        >
-          <DownloadOutlined sx={{ mr: "10px" }} />
-          COMING SOON
-        </Button>
-      </FlexBetween>
-
       {/* ✅ Loading indicator */}
       {isLoading && (
         <Typography mt="1rem">Loading Carbon Insights...</Typography>
@@ -220,11 +206,11 @@ const CarbonFootprint = () => {
             gap="20px"
           >
             <Box>
-              <Typography variant="h6" fontWeight="bold">
-                ⚠ Adverse Impacts on Society
+              <Typography variant="h5" fontWeight="bold">
+                Adverse Impacts on Society
               </Typography>
 
-              <Typography variant="body2" sx={{ opacity: 0.75 }}>
+              <Typography variant="h6" sx={{ opacity: 0.75 }}>
                 • Increased global warming & extreme weather events<br />
                 • Rising sea levels affecting coastal regions<br />
                 • Health risks from air pollution<br />
@@ -234,11 +220,11 @@ const CarbonFootprint = () => {
             </Box>
 
             <Box>
-              <Typography variant="h6" fontWeight="bold">
-                ✅ How You Can Reduce Emissions
+              <Typography variant="h5" fontWeight="bold">
+                How You Can Reduce Emissions
               </Typography>
 
-              <Typography variant="body2" sx={{ opacity: 0.75 }}>
+              <Typography variant="h6" sx={{ opacity: 0.75 }}>
                 • Use public transport / EVs<br />
                 • Reduce electricity usage<br />
                 • Adopt renewable energy<br />
