@@ -156,8 +156,8 @@ const CarbonFootprint = () => {
 
         {/* BREAKDOWN CHART */}
         <Box
-          gridColumn="span 16"
-          gridRow="span 2"
+          gridColumn="span 12"
+          gridRow="span 4"
           backgroundColor={theme.palette.background.alt}
           p="1.5rem"
           borderRadius="0.8rem"
