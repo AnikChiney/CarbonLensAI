@@ -25,6 +25,7 @@ const CarbonFootprint = () => {
     month: currentMonth,
   });
 
+  // ✅ FALLBACK DATA
   const fallbackData = {
     isGood: true,
     percentageIncDec: 10,
@@ -38,6 +39,7 @@ const CarbonFootprint = () => {
     },
   };
 
+  // ✅ SAFE DATA (always available)
   const safeData = data || fallbackData;
 
   return (
@@ -47,12 +49,27 @@ const CarbonFootprint = () => {
           title="Carbon Footprint"
           subtitle="How Much Carbon Are You Really Emitting? Uncover Your Impact Now!"
         />
+
+        <Button
+          sx={{
+            backgroundColor: theme.palette.secondary.light,
+            color: theme.palette.background.alt,
+            fontSize: "14px",
+            fontWeight: "bold",
+            padding: "10px 20px",
+          }}
+        >
+          <DownloadOutlined sx={{ mr: "10px" }} />
+          COMING SOON
+        </Button>
       </FlexBetween>
 
+      {/* ✅ Loading indicator */}
       {isLoading && (
         <Typography mt="1rem">Loading Carbon Insights...</Typography>
       )}
 
+      {/* ✅ Always render grid */}
       <Box
         mt="20px"
         display="grid"
@@ -66,25 +83,35 @@ const CarbonFootprint = () => {
         }}
       >
         {/* IMAGE */}
-        <Box gridColumn="span 4" gridRow="span 2" p="1rem">
+        <Box
+          gridColumn="span 4"
+          gridRow="span 2"
+          backgroundColor="transparent"
+          p="1rem"
+          borderRadius="0.55rem"
+          display="flex"
+          justifyContent="space-between"
+        >
           <Box
             component="img"
             sx={{ height: 330, width: 330 }}
-            alt="status"
+            alt={safeData.isGood ? "Well Done" : "Try Harder"}
             src={safeData.isGood ? "/well-done.png" : "/sad.svg"}
           />
         </Box>
 
-        {/* SUMMARY */}
+        {/* SUMMARY TEXT */}
         <Box
           gridColumn="span 8"
           gridRow="span 2"
+          backgroundColor="transparent"
           p="1rem"
+          borderRadius="0.55rem"
           display="flex"
           flexDirection="column"
           justifyContent="center"
         >
-          <Typography variant="h4" fontWeight="bold">
+          <Typography variant="h4" sx={{ fontWeight: "bold" }}>
             Your current CO₂ emissions are
           </Typography>
 
@@ -96,7 +123,7 @@ const CarbonFootprint = () => {
               color: safeData.isGood ? "green" : "red",
             }}
           >
-            {parseInt(safeData.percentageIncDec || 0)}%
+            {parseInt(safeData.percentageIncDec)}%
             {safeData.isGood ? " LESS" : " MORE"}
           </Typography>
 
@@ -104,30 +131,30 @@ const CarbonFootprint = () => {
             than the standard values for a person.
           </Typography>
 
+          {/* ✅ Demo data indicator */}
           {!data && (
             <Typography color="orange" fontSize="0.9rem">
-              Showing demo data
+              Showing demo data (API unavailable)
             </Typography>
           )}
         </Box>
 
         {/* OVERVIEW BOX */}
-        <Box gridColumn="span 4" gridRow="span 2">
+        <Box
+          gridColumn="span 4"
+          gridRow="span 2"
+          display="flex"
+          flexDirection="column"
+          gap="20px"
+        >
           <OverviewBox
             title="Current Month (KGs CO2 Emitted)"
-            value={parseInt(safeData.totalCarbonByPerson || 0)}
-            transport={parseInt(safeData.carbonData.categories.transport || 0)}
-            electricity={parseInt(
-              safeData.carbonData.categories.electricity || 0
-            )}
-            others={parseInt(safeData.carbonData.categories.others || 0)}
+            value={parseInt(safeData.totalCarbonByPerson)}
+            transport={parseInt(safeData.carbonData.categories.transport)}
+            electricity={parseInt(safeData.carbonData.categories.electricity)}
+            others={parseInt(safeData.carbonData.categories.others)}
             icon={
-              <Co2
-                sx={{
-                  color: theme.palette.secondary[300],
-                  fontSize: "26px",
-                }}
-              />
+              <Co2 sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />
             }
           />
         </Box>
@@ -143,13 +170,10 @@ const CarbonFootprint = () => {
           <Typography variant="h6" mb="0.5rem">
             12-Month Emission Trend
           </Typography>
-
-          <Box sx={{ height: "220px" }}>
-            <OverviewChart isDashboard={true} />
-          </Box>
+          <OverviewChart isDashboard={true} />
         </Box>
 
-        {/* BREAKDOWN */}
+        {/* BREAKDOWN CHART */}
         <Box
           gridColumn="span 12"
           gridRow="span 3"
