@@ -1,3 +1,24 @@
+import React from "react";
+import FlexBetween from "components/FlexBetween";
+import Header from "components/Header";
+import { Co2, DownloadOutlined } from "@mui/icons-material";
+import {
+	Box,
+	Button,
+	Typography,
+	useTheme,
+	useMediaQuery,
+} from "@mui/material";
+import BreakdownChart from "components/BreakdownChart";
+import OverviewChart from "components/OverviewChart";
+import { useGetCarbonStatsQuery } from "state/api";
+import OverviewBox from "components/OverviewBox";
+import CarbonFootprintByMonth from "components/CarbonFootprintByMonth";
+import CarbonSaveForm from "components/CarbonSaveForm";
+
+
+
+
 const CarbonFootprint = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
