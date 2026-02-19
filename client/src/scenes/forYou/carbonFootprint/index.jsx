@@ -115,8 +115,8 @@ const CarbonFootprint = () => {
           )}
         </Box>
 
-        {/* CURRENT MONTH BOX */}
-        <Box gridColumn="span 4" gridRow="span 2">
+        {/* CURRENT MONTH */}
+        <Box gridColumn="span 12" gridRow="span 1">
           <OverviewBox
             title="Current Month (KGs CO2 Emitted)"
             value={parseInt(safeData.totalCarbonByPerson || 0)}
@@ -136,41 +136,38 @@ const CarbonFootprint = () => {
           />
         </Box>
 
-        {/* OVERVIEW CHART — SAME SIZE */}
+        {/* TREND CHART */}
         <Box
-          gridColumn="span 4"
+          gridColumn="span 12"
           gridRow="span 2"
           backgroundColor={theme.palette.background.alt}
           p="1.5rem"
-          borderRadius="0.75rem"
+          borderRadius="0.8rem"
           boxShadow="0 4px 20px rgba(0,0,0,0.25)"
-          display="flex"
-          flexDirection="column"
         >
-          <Typography variant="h6" fontWeight="bold" mb="1rem">
+          <Typography variant="h5" fontWeight="bold" mb="1rem">
             12-Month Emission Trend
           </Typography>
 
-          {/* ✅ FIXED HEIGHT PREVENTS OVERFLOW */}
-          <Box sx={{ height: "180px", minHeight: 0 }}>
+          <Box sx={{ height: "260px" }}>
             <OverviewChart isDashboard={true} />
           </Box>
         </Box>
 
-        {/* BREAKDOWN */}
+        {/* BREAKDOWN CHART */}
         <Box
-          gridColumn="span 4"
+          gridColumn="span 12"
           gridRow="span 2"
           backgroundColor={theme.palette.background.alt}
           p="1.5rem"
-          borderRadius="0.75rem"
+          borderRadius="0.8rem"
           boxShadow="0 4px 20px rgba(0,0,0,0.25)"
         >
-          <Typography variant="h6" fontWeight="bold" mb="1rem">
+          <Typography variant="h5" fontWeight="bold" mb="1rem">
             Emissions by Category
           </Typography>
 
-          <Box sx={{ height: "180px" }}>
+          <Box sx={{ height: "260px" }}>
             <BreakdownChart
               categories={safeData.carbonData.categories}
               isDashboard={true}
@@ -183,17 +180,17 @@ const CarbonFootprint = () => {
           gridColumn="span 12"
           gridRow="span 2"
           background="linear-gradient(135deg, rgba(0,255,170,0.08), rgba(0,198,255,0.08))"
-          p="1.8rem"
-          borderRadius="0.9rem"
+          p="2rem"
+          borderRadius="1rem"
           boxShadow="0 6px 24px rgba(0,0,0,0.25)"
         >
-          <Typography variant="h4" fontWeight="bold" mb="0.8rem">
+          <Typography variant="h4" fontWeight="bold" mb="1rem">
             Why Reducing Carbon Emissions Matters 🌍
           </Typography>
 
-          <Typography variant="h6" sx={{ opacity: 0.75 }} mb="1.2rem">
-            Carbon emissions accelerate climate change, impacting ecosystems,
-            economies, and human health globally.
+          <Typography variant="h6" sx={{ opacity: 0.75 }} mb="1.5rem">
+            Carbon emissions are a leading driver of climate change, affecting
+            ecosystems, economies, and human health.
           </Typography>
 
           <Box
@@ -201,14 +198,14 @@ const CarbonFootprint = () => {
             gridTemplateColumns={
               isNonMediumScreens ? "repeat(2, 1fr)" : "repeat(1, 1fr)"
             }
-            gap="28px"
+            gap="32px"
           >
             <Box>
               <Typography variant="h5" fontWeight="bold">
                 ⚠ Adverse Impacts on Society
               </Typography>
 
-              <Typography sx={{ opacity: 0.75, lineHeight: 1.7 }}>
+              <Typography sx={{ opacity: 0.75, lineHeight: 1.8 }}>
                 • Increased global warming & extreme weather events<br />
                 • Rising sea levels affecting coastal regions<br />
                 • Health risks from air pollution<br />
@@ -222,7 +219,7 @@ const CarbonFootprint = () => {
                 ✅ How You Can Reduce Emissions
               </Typography>
 
-              <Typography sx={{ opacity: 0.75, lineHeight: 1.7 }}>
+              <Typography sx={{ opacity: 0.75, lineHeight: 1.8 }}>
                 • Use public transport / EVs<br />
                 • Reduce electricity usage<br />
                 • Adopt renewable energy<br />
