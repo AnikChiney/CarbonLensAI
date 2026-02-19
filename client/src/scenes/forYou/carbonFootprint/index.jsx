@@ -13,20 +13,8 @@ import OverviewChart from "components/OverviewChart";
 import { useGetCarbonStatsQuery } from "state/api";
 import OverviewBox from "components/OverviewBox";
 
-import React from "react";
-import FlexBetween from "components/FlexBetween";
-import Header from "components/Header";
-import { Co2 } from "@mui/icons-material";
-import {
-  Box,
-  Typography,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
-import BreakdownChart from "components/BreakdownChart";
-import OverviewChart from "components/OverviewChart";
-import { useGetCarbonStatsQuery } from "state/api";
-import OverviewBox from "components/OverviewBox";
+
+
 
 const CarbonFootprint = () => {
   const theme = useTheme();
