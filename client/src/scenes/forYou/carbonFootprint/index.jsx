@@ -140,7 +140,6 @@ const CarbonFootprint = () => {
         <Box
           gridColumn="span 12"
           gridRow="span 2"
-          backgroundColor={theme.palette.background.alt}
           p="1.5rem"
           borderRadius="0.8rem"
         >
@@ -148,7 +147,7 @@ const CarbonFootprint = () => {
             12-Month Emission Trend
           </Typography>
         
-          <Box sx={{ height: "200px" }}>
+          <Box sx={{ height: "260px" }}>
             <OverviewChart isDashboard={true} />
           </Box>
         </Box>
@@ -157,7 +156,7 @@ const CarbonFootprint = () => {
         {/* BREAKDOWN CHART */}
         <Box
           gridColumn="span 12"
-          gridRow="span 4"
+          gridRow="span 2.5"
           backgroundColor={theme.palette.background.alt}
           p="1.5rem"
           borderRadius="0.8rem"
