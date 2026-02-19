@@ -26,7 +26,6 @@ const CarbonFootprint = () => {
     month: currentMonth,
   });
 
-  // ✅ Safe fallback
   const fallbackData = {
     isGood: true,
     percentageIncDec: 10,
@@ -71,6 +70,11 @@ const CarbonFootprint = () => {
         gridTemplateColumns="repeat(12, 1fr)"
         gridAutoRows="220px"   // ✅ prevents overlap
         gap="26px"
+        sx={{
+          "& > div": {
+            gridColumn: isNonMediumScreens ? undefined : "span 12",
+          },
+        }}
       >
         {/* IMAGE */}
         <Box gridColumn="span 4" gridRow="span 2" sx={cardStyle}>
@@ -114,13 +118,15 @@ const CarbonFootprint = () => {
           )}
         </Box>
 
-        {/* CURRENT MONTH */}
-        <Box gridColumn="span 12" gridRow="span 1">
+        {/* CURRENT MONTH — LEFT */}
+        <Box gridColumn="span 4" gridRow="span 2">
           <OverviewBox
             title="Current Month (KGs CO2 Emitted)"
             value={parseInt(safeData.totalCarbonByPerson || 0)}
             transport={parseInt(safeData.carbonData.categories.transport || 0)}
-            electricity={parseInt(safeData.carbonData.categories.electricity || 0)}
+            electricity={parseInt(
+              safeData.carbonData.categories.electricity || 0
+            )}
             others={parseInt(safeData.carbonData.categories.others || 0)}
             icon={
               <Co2 sx={{ color: theme.palette.secondary[300], fontSize: 26 }} />
@@ -128,24 +134,24 @@ const CarbonFootprint = () => {
           />
         </Box>
 
-        {/* TREND CHART */}
-        <Box gridColumn="span 12" gridRow="span 2" sx={cardStyle}>
-          <Typography variant="h5" fontWeight="bold" mb="1rem">
+        {/* TREND CHART — RIGHT */}
+        <Box gridColumn="span 8" gridRow="span 2" sx={cardStyle}>
+          <Typography variant="h5" fontWeight="bold" mb="0.8rem">
             12-Month Emission Trend
           </Typography>
 
-          <Box sx={{ height: "300px" }}>
+          <Box sx={{ height: "280px" }}>
             <OverviewChart isDashboard={true} />
           </Box>
         </Box>
 
         {/* BREAKDOWN */}
         <Box gridColumn="span 12" gridRow="span 2" sx={cardStyle}>
-          <Typography variant="h5" fontWeight="bold" mb="1rem">
+          <Typography variant="h5" fontWeight="bold" mb="0.8rem">
             Emissions by Category
           </Typography>
 
-          <Box sx={{ height: "300px" }}>
+          <Box sx={{ height: "280px" }}>
             <BreakdownChart
               categories={safeData.carbonData.categories}
               isDashboard={true}
@@ -154,23 +160,28 @@ const CarbonFootprint = () => {
         </Box>
 
         {/* AWARENESS */}
-        <Box gridColumn="span 12" gridRow="span 2" sx={{
-          borderRadius: "1.2rem",
-          padding: "2rem",
-          background:
-            "linear-gradient(135deg, rgba(0,255,170,0.08), rgba(0,198,255,0.08))",
-          boxShadow: "0 6px 28px rgba(0,0,0,0.25)",
-        }}>
+        <Box
+          gridColumn="span 12"
+          gridRow="span 2"
+          sx={{
+            borderRadius: "1.2rem",
+            padding: "2rem",
+            background:
+              "linear-gradient(135deg, rgba(0,255,170,0.08), rgba(0,198,255,0.08))",
+            boxShadow: "0 6px 28px rgba(0,0,0,0.25)",
+          }}
+        >
           <Typography variant="h4" fontWeight="bold" mb="1rem">
             Why Reducing Carbon Emissions Matters 🌍
           </Typography>
 
-          <Typography variant="h6" sx={{ opacity: 0.75 }} mb="1.4rem">
+          <Typography variant="h6" sx={{ opacity: 0.75 }} mb="1.2rem">
             Carbon emissions accelerate climate change, disrupting ecosystems,
             economies, and human well-being.
           </Typography>
 
-          <Box display="grid"
+          <Box
+            display="grid"
             gridTemplateColumns={isNonMediumScreens ? "repeat(2,1fr)" : "1fr"}
             gap="30px"
           >
@@ -196,7 +207,7 @@ const CarbonFootprint = () => {
               <Typography sx={{ opacity: 0.75, lineHeight: 1.8 }}>
                 • Use EVs / public transport<br />
                 • Reduce electricity usage<br />
-                • Adopt renewable energy<br />
+                • Renewable energy<br />
                 • Reduce waste<br />
                 • Sustainable lifestyle
               </Typography>
