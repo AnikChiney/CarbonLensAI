@@ -1,129 +1,109 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import axios from "axios";
 
+const API_URL = "https://newsapi.org/v2";
+
+/* ---------------------------------- */
+/* Test Route */
+/* ---------------------------------- */
 const newsTest = asyncHandler(async (req, res) => {
-	res.status(200).json({ message: `ROUTE newsTest IS WORKING` });
+  res.status(200).json({ message: "ROUTE newsTest IS WORKING" });
 });
 
+/* ---------------------------------- */
+/* Top Headlines */
+/* ---------------------------------- */
 const getTopHeadlines = asyncHandler(async (req, res) => {
-	try {
-		const { pageSize, page } = req.query;
-		const apiKey = "85cc75be25484d8f8acdcc1d25985bd4";
+  const { page = 1, pageSize = 10 } = req.query;
 
-		const keywords = ["environment", "climate", "carbon"];
+  const keywords = ["environment", "climate", "carbon"];
+  let allArticles = [];
 
-		let allArticles = [];
+  for (const keyword of keywords) {
+    const response = await axios.get(`${API_URL}/top-headlines`, {
+      params: {
+        q: keyword,
+        pageSize: Math.floor(pageSize / keywords.length),
+        page,
+        apiKey: process.env.NEWS_API_KEY,
+        language: "en",
+      },
+    });
 
-		for (const keyword of keywords) {
-			const url = `https://newsapi.org/v2/top-headlines?q=${keyword}&pageSize=${
-				pageSize / keywords.length || 10
-			}&page=${page || 1}&apiKey=${apiKey}`;
-			const response = await axios.get(url);
+    if (response.status === 200) {
+      allArticles = allArticles.concat(response.data.articles);
+    }
+  }
 
-			if (response.status === 200) {
-				const articles = response.data.articles;
-				allArticles = allArticles.concat(articles);
-			} else {
-				console.error(`Failed to fetch articles for keyword "${keyword}"`);
-			}
-		}
-
-		res
-			.status(200)
-			.json({ numArticles: allArticles.length, articles: allArticles });
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ message: "Server error" });
-	}
+  res.status(200).json({
+    numArticles: allArticles.length,
+    articles: allArticles,
+  });
 });
 
-const getLocalNews = async (req, res) => {
-	try {
-		const { page, pageSize } = req.query;
-		const city = req.user.city.toLowerCase();
-		// console.log(city);
-		const apiKey = "85cc75be25484d8f8acdcc1d25985bd4";
+/* ---------------------------------- */
+/* Local News */
+/* ---------------------------------- */
+const getLocalNews = asyncHandler(async (req, res) => {
+  const { page = 1, pageSize = 30 } = req.query;
 
-		// Construct the URL for the News API
-		const url = `https://newsapi.org/v2/everything?pageSize=${
-			pageSize || 30
-		}&q=${city || "prayagraj"}&apiKey=${apiKey}&page=${page || 1}`;
+  const city = req.user?.city?.toLowerCase() || "india";
 
-		// %20AND%20(environment%20OR%20climate%20OR%20carbon%20OR%20water)
+  const response = await axios.get(`${API_URL}/everything`, {
+    params: {
+      q: city,
+      pageSize,
+      page,
+      apiKey: process.env.NEWS_API_KEY,
+      language: "en",
+      sortBy: "publishedAt",
+    },
+  });
 
-		// Call the News API
-		const response = await axios.get(url);
+  const articles = response.data.articles;
 
-		// Check if the response status is OK
-		if (response.status === 200) {
-			const articles = response.data.articles;
-			res.status(200).json({ numArticles: articles.length, articles });
-		} else {
-			res.status(500).json({ message: "Failed to fetch news articles" });
-		}
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ message: "Server error" });
-	}
+  res.status(200).json({
+    numArticles: articles.length,
+    articles,
+  });
+});
+
+/* ---------------------------------- */
+/* Global Environmental News */
+/* ---------------------------------- */
+const getGlobalNews = asyncHandler(async (req, res) => {
+  const { page = 1, pageSize = 30 } = req.query;
+
+  // Get today's date
+  const today = new Date();
+
+  // Get date 7 days ago
+  const lastWeek = new Date();
+  lastWeek.setDate(today.getDate() - 7);
+
+  const response = await axios.get("https://newsapi.org/v2/everything", {
+    params: {
+      q: "(environment OR climate OR carbon OR renewable energy)",
+      from: lastWeek.toISOString().split("T")[0], // last 7 days
+      sortBy: "publishedAt",
+      language: "en",
+      pageSize,
+      page,
+      apiKey: process.env.NEWS_API_KEY,
+    },
+  });
+
+  const articles = response.data.articles;
+
+  res.status(200).json({
+    numArticles: articles.length,
+    articles,
+  });
+});
+
+export {
+  newsTest,
+  getTopHeadlines,
+  getLocalNews,
+  getGlobalNews,
 };
-
-const getGlobalNews = async (req, res) => {
-	try {
-		const { page, pageSize } = req.query;
-		// console.log(city);
-		const apiKey = "85cc75be25484d8f8acdcc1d25985bd4";
-
-		// Construct the URL for the News API
-		const url = `https://newsapi.org/v2/everything?pageSize=${
-			pageSize || 30
-		}&q=(environment%20OR%20climate%20OR%20carbon%20OR%20water%20OR%20nuclear)&apiKey=${apiKey}&page=${
-			page || 1
-		}`;
-
-		// Call the News API
-		const response = await axios.get(url);
-
-		// Check if the response status is OK
-		if (response.status === 200) {
-			const articles = response.data.articles;
-			res.status(200).json({ numArticles: articles.length, articles });
-		} else {
-			res.status(500).json({ message: "Failed to fetch news articles" });
-		}
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ message: "Server error" });
-	}
-};
-// const getTopHeadlines = asyncHandler(async (req, res) => {
-// 	try {
-// 		const { pageSize, page } = req.query;
-// 		const apiKey = "ba4c0ce6de1244c1a280bb7cfa38b987";
-
-// 		// Construct the URL for the News API
-// 		// const url = `https://newsapi.org/v2/top-headlines?country=${country}&pageSize=${pageSize}&q=${q}&page=${page}&apiKey=${apiKey}`;
-// 		const url = `https://newsapi.org/v2/top-headlines?apiKey=${apiKey}&q=carbon&pageSize=${
-// 			pageSize !== undefined ? pageSize : 20
-// 		}&page=${page !== undefined ? page : 1}`;
-
-// 		//Example
-// 		// https://newsapi.org/v2/top-headlines?apiKey=ba4c0ce6de1244c1a280bb7cfa38b987&country=in&category=business&q=environment%20OR%20climate%20OR%20water%20scarcity%20OR%20earth%20OR%20WHO%20OR%20carbon%20footprint&pageSize=20&page=1
-// 		// q=environment%20OR%20climate%20OR%20water%20scarcity%20OR%20earth%20OR%20WHO%20OR%20carbon%20footprint
-
-// 		// Call the News API
-// 		const response = await axios.get(url);
-
-// 		// Check if the response status is OK
-// 		if (response.status === 200) {
-// 			const articles = response.data.articles;
-// 			res.status(200).json({ articles });
-// 		} else {
-// 			res.status(500).json({ message: "Failed to fetch news articles" });
-// 		}
-// 	} catch (error) {
-// 		console.error(error);
-// 		res.status(500).json({ message: "Server error" });
-// 	}
-// });
-
-export { newsTest, getTopHeadlines, getLocalNews, getGlobalNews };

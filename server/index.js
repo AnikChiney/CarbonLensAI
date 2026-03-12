@@ -1,16 +1,21 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
-import dotenv from "dotenv";
+console.log("NEWS API KEY:", process.env.NEWS_API_KEY);
+
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-
+import newsRoutes from "./routes/news.js";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.js";
 
-dotenv.config();
+
+
 
 // -------------------- CONFIGURATION -------------------- //
 const app = express();
@@ -34,13 +39,14 @@ app.use(morgan("common"));
 
 const allowedOrigins = [
   "http://localhost:3000",
+  "http://localhost:5173",
   "https://carbonlensai-1.onrender.com"
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow non-browser tools
+      if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
@@ -66,7 +72,7 @@ app.get("/", (req, res) => {
 // -------------------- API ROUTES -------------------- //
 
 app.use("/auth", authRoutes);
-
+app.use("/news", newsRoutes);
 // -------------------- DATABASE -------------------- //
 
 connectDB();

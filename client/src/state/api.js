@@ -67,11 +67,11 @@ export const api = createApi({
       providesTags: ["User"],
     }),
 
-    // ================= NEWS =================
+// ================= NEWS =================
 
     getGlobalNews: build.query({
       query: ({ page, pageSize }) => ({
-        url: "news/get-global-news",
+        url: "news",
         method: "GET",
         params: { page, pageSize },
       }),
@@ -79,7 +79,7 @@ export const api = createApi({
 
     getLocalNews: build.query({
       query: ({ page, pageSize }) => ({
-        url: "news/get-local-news",
+        url: "news/local",
         method: "GET",
         params: { page, pageSize },
       }),
@@ -87,7 +87,7 @@ export const api = createApi({
 
     getTopHeadlines: build.query({
       query: ({ page, pageSize }) => ({
-        url: "news/get-top-headlines",
+        url: "news/top-headlines",
         method: "GET",
         params: { page, pageSize },
       }),
