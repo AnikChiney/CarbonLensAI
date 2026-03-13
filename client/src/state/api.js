@@ -81,16 +81,15 @@ export const api = createApi({
       query: ({ location, page, pageSize }) => ({
         url: "news/local",
         method: "GET",
-        // Added 'location' to the params object below
         params: { location, page, pageSize },
       }),
     }),
 
     getTopHeadlines: build.query({
-      query: ({ page, pageSize }) => ({
+      query: ({ category, page, pageSize }) => ({ // Added category here
         url: "news/top-headlines",
         method: "GET",
-        params: { page, pageSize },
+        params: { category, page, pageSize }, // Passed category here
       }),
     }),
 

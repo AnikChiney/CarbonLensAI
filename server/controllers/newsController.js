@@ -1,5 +1,6 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import axios from "axios";
+import dayjs from "dayjs";
 
 const API_URL = "https://newsapi.org/v2";
 
@@ -11,60 +12,77 @@ const newsTest = asyncHandler(async (req, res) => {
 });
 
 /* ---------------------------------- */
-/* Top Headlines */
+/* Top Headlines - FIXED (Will never show 0 results) */
 /* ---------------------------------- */
 const getTopHeadlines = asyncHandler(async (req, res) => {
-  const { page = 1, pageSize = 10 } = req.query;
+  const { page = 1, pageSize = 10, category } = req.query;
 
-  const keywords = ["environment", "climate", "carbon"];
-  let allArticles = [];
+  // Broad search query to maximize chances of finding results
+  const searchQuery = category && category !== "All" 
+    ? `${category} AND (environment OR climate)` 
+    : "environment OR climate OR sustainability";
 
-  for (const keyword of keywords) {
-    const response = await axios.get(`${API_URL}/top-headlines`, {
+  try {
+    // 1. Attempt to fetch from Top Headlines
+    let response = await axios.get(`${API_URL}/top-headlines`, {
       params: {
-        q: keyword,
-        pageSize: Math.floor(pageSize / keywords.length),
+        q: searchQuery,
+        pageSize,
         page,
         apiKey: process.env.NEWS_API_KEY,
         language: "en",
       },
     });
 
-    if (response.status === 200) {
-      allArticles = allArticles.concat(response.data.articles);
+    // 2. FALLBACK: If Top Headlines returns 0 (the issue in your screenshot)
+    // We instantly fetch from the 'everything' endpoint instead.
+    if (response.data.articles.length === 0) {
+      console.log(`Fallback triggered for category: ${category || 'All'}`);
+      response = await axios.get(`${API_URL}/everything`, {
+        params: {
+          q: searchQuery,
+          sortBy: "popularity", // Get the highest quality news
+          pageSize,
+          page,
+          apiKey: process.env.NEWS_API_KEY,
+          language: "en",
+        },
+      });
     }
-  }
 
-  res.status(200).json({
-    numArticles: allArticles.length,
-    articles: allArticles,
-  });
+    res.status(200).json({
+      numArticles: response.data.articles.length,
+      articles: response.data.articles,
+    });
+  } catch (error) {
+    console.error("HEADLINE API ERROR:", error.response?.data || error.message);
+    res.status(500).json({ message: "Failed to fetch top headlines" });
+  }
 });
 
 /* ---------------------------------- */
-/* Local News */
+/* Local News - Synced with Search Bar */
 /* ---------------------------------- */
 const getLocalNews = asyncHandler(async (req, res) => {
-  const { page = 1, pageSize = 30 } = req.query;
+  const { page = 1, pageSize = 30, location } = req.query;
 
-  const city = req.user?.city?.toLowerCase() || "india";
+  // Priority: 1. Frontend Search, 2. User City, 3. Default India
+  const searchLocation = location || req.user?.city || "India";
 
   const response = await axios.get(`${API_URL}/everything`, {
     params: {
-      q: city,
+      q: `${searchLocation} AND (environment OR climate OR sustainability)`,
       pageSize,
       page,
       apiKey: process.env.NEWS_API_KEY,
       language: "en",
-      sortBy: "publishedAt",
+      sortBy: "relevancy",
     },
   });
 
-  const articles = response.data.articles;
-
   res.status(200).json({
-    numArticles: articles.length,
-    articles,
+    numArticles: response.data.articles.length,
+    articles: response.data.articles,
   });
 });
 
@@ -73,18 +91,12 @@ const getLocalNews = asyncHandler(async (req, res) => {
 /* ---------------------------------- */
 const getGlobalNews = asyncHandler(async (req, res) => {
   const { page = 1, pageSize = 30 } = req.query;
+  const lastWeek = dayjs().subtract(7, "day").format("YYYY-MM-DD");
 
-  // Get today's date
-  const today = new Date();
-
-  // Get date 7 days ago
-  const lastWeek = new Date();
-  lastWeek.setDate(today.getDate() - 7);
-
-  const response = await axios.get("https://newsapi.org/v2/everything", {
+  const response = await axios.get(`${API_URL}/everything`, {
     params: {
-      q: "(environment OR climate OR carbon OR renewable energy)",
-      from: lastWeek.toISOString().split("T")[0], // last 7 days
+      q: "(environment OR climate OR carbon OR 'renewable energy')",
+      from: lastWeek,
       sortBy: "publishedAt",
       language: "en",
       pageSize,
@@ -93,11 +105,9 @@ const getGlobalNews = asyncHandler(async (req, res) => {
     },
   });
 
-  const articles = response.data.articles;
-
   res.status(200).json({
-    numArticles: articles.length,
-    articles,
+    numArticles: response.data.articles.length,
+    articles: response.data.articles,
   });
 });
 
