@@ -78,10 +78,11 @@ export const api = createApi({
     }),
 
     getLocalNews: build.query({
-      query: ({ page, pageSize }) => ({
+      query: ({ location, page, pageSize }) => ({
         url: "news/local",
         method: "GET",
-        params: { page, pageSize },
+        // Added 'location' to the params object below
+        params: { location, page, pageSize },
       }),
     }),
 
