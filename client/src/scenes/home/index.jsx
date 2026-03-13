@@ -8,7 +8,7 @@ import {
   Card,
   CardContent,
   Fade,
-  useTheme,
+  //useTheme,
   alpha,
   Stack
 } from "@mui/material";
@@ -22,7 +22,7 @@ import {
 
 export default function Home() {
   const navigate = useNavigate();
-  const theme = useTheme();
+ //const theme = useTheme();
   const [showBrand, setShowBrand] = useState(false);
 
   useEffect(() => {
@@ -144,7 +144,7 @@ export default function Home() {
           {showBrand && (
             <Fade in timeout={1000}>
               <Typography sx={{ mt: 8, fontSize: "0.75rem", letterSpacing: 5, opacity: 0.4, textTransform: "uppercase" }}>
-                Official Engine: CarbonLens AI v3.0
+                Powered by <i><b>CarbonLens AI</b></i> 
               </Typography>
             </Fade>
           )}
