@@ -1,26 +1,9 @@
 // color design tokens export
 export const tokensDark = {
-  // grey: {
-  //   0: "#ffffff", // manually adjusted
-  //   10: "#f6f6f6", // manually adjusted
-  //   50: "#f0f0f0", // manually adjusted
-  //   100: "#e0e0e0",
-  //   200: "#c2c2c2",
-  //   300: "#a3a3a3",
-  //   400: "#858585",
-  //   500: "#666666",
-  //   600: "#525252",
-  //   700: "#3d3d3d",
-  //   800: "#292929",
-  //   900: "#141414",
-  //   1000: "#000000", // manually adjusted
-  // },
-
   grey: {
-    //black
-    0: "#ffffff", // manually adjusted
-    10: "#f6f6f6", // manually adjusted
-    50: "#f0f0f0", // manually adjusted
+    0: "#ffffff", 
+    10: "#f6f6f6", 
+    50: "#f0f0f0", 
     100: "#d7d8da",
     200: "#b0b2b5",
     300: "#888b90",
@@ -30,29 +13,9 @@ export const tokensDark = {
     700: "#22252a",
     800: "#17191c",
     900: "#0b0c0e",
-    1000: "#000000", // manually adjusted
+    1000: "#000000", 
   },
-
-
-
-
-
-
-  // primary: {
-  //   // blue
-  //   100: "#d3d4de",
-  //   200: "#a6a9be",
-  //   300: "#7a7f9d",
-  //   400: "#4d547d",
-  //   500: "#21295c",
-  //   600: "#191F45", // manually adjusted
-  //   700: "#141937",
-  //   800: "#0d1025",
-  //   900: "#070812",
-  // },
-
   primary: {
-    //black
     100: "#d3d4d6",
     200: "#a7a9ad",
     300: "#7a7e83",
@@ -63,24 +26,8 @@ export const tokensDark = {
     800: "#0e1014",
     900: "#07080a"
   },
-
-  // secondary: {
-  //   // yellow
-  //   50: "#f0f0f0", // manually adjusted
-  //   100: "#fff6e0",
-  //   200: "#ffedc2",
-  //   300: "#ffe3a3",
-  //   400: "#ffda85",
-  //   500: "#ffd166",
-  //   600: "#cca752",
-  //   700: "#997d3d",
-  //   800: "#665429",
-  //   900: "#332a14",
-  // },
-
   secondary: {
-    //white
-    50: "#f0f0f0", // manually adjusted
+    50: "#f0f0f0", 
     100: "#fcfcfc",
     200: "#f8f8f8",
     300: "#f5f5f5",
@@ -93,7 +40,7 @@ export const tokensDark = {
   },
 };
 
-// function that reverses the color palette
+// Function that reverses the color palette
 function reverseTokens(tokensDark) {
   const reversedTokens = {};
   Object.entries(tokensDark).forEach(([key, val]) => {
@@ -117,7 +64,7 @@ export const themeSettings = (mode) => {
       mode: mode,
       ...(mode === "dark"
         ? {
-            // palette values for dark mode
+            // DARK MODE PALETTE
             primary: {
               ...tokensDark.primary,
               main: tokensDark.primary[400],
@@ -137,53 +84,63 @@ export const themeSettings = (mode) => {
             },
           }
         : {
-            // palette values for light mode
+            // 🔥 REFINED LIGHT MODE (Professional Clean Look)
             primary: {
               ...tokensLight.primary,
-              main: tokensDark.grey[50],
-              light: tokensDark.grey[100],
+              main: "#4cceac", // Custom green brand color
+              light: tokensLight.primary[100],
             },
             secondary: {
               ...tokensLight.secondary,
-              main: tokensDark.secondary[600],
-              light: tokensDark.secondary[700],
+              main: "#2d3748", // Professional Dark Slate
+              light: tokensLight.secondary[700],
             },
             neutral: {
               ...tokensLight.grey,
-              main: tokensDark.grey[500],
+              main: tokensLight.grey[500],
             },
             background: {
-              default: tokensDark.grey[0],
-              alt: tokensDark.grey[50],
+              default: "#f4f7fe", // Modern light grey-blue base
+              alt: "#ffffff",     // Pure white for cards (makes them "pop")
             },
+            text: {
+              primary: "#111827", // Rich black for readability
+              secondary: "#6b7280", // Muted gray
+            }
           }),
     },
     typography: {
       fontFamily: ["Inter", "sans-serif"].join(","),
       fontSize: 12,
-      h1: {
-        fontFamily: ["Inter", "sans-serif"].join(","),
-        fontSize: 40,
+      h1: { fontFamily: ["Inter", "sans-serif"].join(","), fontSize: 40, fontWeight: 700 },
+      h2: { fontFamily: ["Inter", "sans-serif"].join(","), fontSize: 32, fontWeight: 700 },
+      h3: { fontFamily: ["Inter", "sans-serif"].join(","), fontSize: 24, fontWeight: 600 },
+      h4: { fontFamily: ["Inter", "sans-serif"].join(","), fontSize: 20, fontWeight: 600 },
+      h5: { fontFamily: ["Inter", "sans-serif"].join(","), fontSize: 16, fontWeight: 500 },
+      h6: { fontFamily: ["Inter", "sans-serif"].join(","), fontSize: 14, fontWeight: 500 },
+    },
+    // 🔥 COMPONENT OVERRIDES: These fix the "flat" look in light mode
+    components: {
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            borderRadius: "16px",
+            boxShadow: mode === "light" 
+                ? "0px 10px 15px -3px rgba(0,0,0,0.05), 0px 4px 6px -2px rgba(0,0,0,0.02)" 
+                : "none",
+            border: mode === "light" ? "1px solid #eaedf3" : "none",
+            backgroundImage: "none", // Removes MUI default overlay in dark mode
+          },
+        },
       },
-      h2: {
-        fontFamily: ["Inter", "sans-serif"].join(","),
-        fontSize: 32,
-      },
-      h3: {
-        fontFamily: ["Inter", "sans-serif"].join(","),
-        fontSize: 24,
-      },
-      h4: {
-        fontFamily: ["Inter", "sans-serif"].join(","),
-        fontSize: 20,
-      },
-      h5: {
-        fontFamily: ["Inter", "sans-serif"].join(","),
-        fontSize: 16,
-      },
-      h6: {
-        fontFamily: ["Inter", "sans-serif"].join(","),
-        fontSize: 14,
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: "8px",
+            textTransform: "none",
+            fontWeight: 600,
+          },
+        },
       },
     },
   };

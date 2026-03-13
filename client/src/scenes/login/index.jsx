@@ -11,31 +11,21 @@ import {
   Container,
   LinearProgress,
   Divider,
+  alpha,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useTheme } from "@mui/material/styles";
-
 import { useGoogleLogin } from "@react-oauth/google";
-
 import { useLoginMutation, useGoogleLoginMutation } from "state/api";
 import { setCredentials } from "state/authSlice";
 import { useDispatch } from "react-redux";
-import {
-  useLocation,
-  useNavigate,
-  Link as RouterLink,
-} from "react-router-dom";
+import { useLocation, useNavigate, Link as RouterLink } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function Copyright(props) {
   return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
+    <Typography variant="body2" color="#64748b" align="center" {...props}>
       {"Copyright © "}
       <Link color="inherit" component={RouterLink} to="/">
         CarbonLensAI
@@ -50,6 +40,7 @@ export default function Login() {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isLight = theme.palette.mode === "light";
 
   const [login, { isLoading }] = useLoginMutation();
   const [loginWithGoogle] = useGoogleLoginMutation();
@@ -58,12 +49,9 @@ export default function Login() {
   const sp = new URLSearchParams(search);
   const redirect = sp.get("redirect") || "/dashboard";
 
-  /* ================= NORMAL LOGIN ================= */
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-
     const email = data.get("email");
     const password = data.get("password");
 
@@ -77,131 +65,167 @@ export default function Login() {
     }
   };
 
-  /* ================= GOOGLE LOGIN ================= */
-
   const googleLoginHandler = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
         const res = await loginWithGoogle({
           access_token: tokenResponse.access_token,
         }).unwrap();
-
         dispatch(setCredentials({ ...res }));
         toast.success("Google login successful!");
         navigate("/dashboard");
       } catch (err) {
-        console.error(err);
         toast.error("Google login failed");
       }
     },
-    onError: () => {
-      toast.error("Google login failed");
-    },
   });
 
-  /* ================= UI ================= */
-
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        background: isLight 
+          ? "radial-gradient(circle at 50% 50%, #f4f7fe 0%, #e2e8f0 100%)"
+          : "radial-gradient(circle at 50% 50%, #112240 0%, #050a10 100%)",
+      }}
+    >
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            p: 4,
+            borderRadius: "24px",
+            backgroundColor: isLight ? "#ffffff" : "rgba(15, 23, 42, 0.6)",
+            backdropFilter: isLight ? "none" : "blur(16px)",
+            border: `1px solid ${isLight ? "#e2e8f0" : "rgba(255, 255, 255, 0.08)"}`,
+            boxShadow: isLight 
+              ? "0px 20px 40px rgba(0,0,0,0.05)" 
+              : "0px 20px 40px rgba(0,0,0,0.4)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "primary.main", width: 56, height: 56 }}>
+            <LockOutlinedIcon sx={{ fontSize: "30px", color: "#fff" }} />
+          </Avatar>
 
-      <Box
-        backgroundColor={theme.palette.background.alt}
-        p="2rem"
-        borderRadius="0.75rem"
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          boxShadow: 3,
-        }}
-      >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon sx={{ fontSize: "26px" }} />
-        </Avatar>
-
-        <Typography component="h1" variant="h5">
-          Sign In
-        </Typography>
-
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{
-              mt: 3,
-              mb: 2,
-              backgroundColor: theme.palette.secondary.light,
-              color: theme.palette.background.alt,
-              fontWeight: "bold",
-            }}
+          <Typography 
+            component="h1" 
+            variant="h3" 
+            fontWeight="800" 
+            sx={{ mt: 2, mb: 1, letterSpacing: "-0.02em" }}
           >
             Sign In
-          </Button>
+          </Typography>
+          <Typography variant="body2" color="#64748b" mb={3}>
+            Welcome back to the Green Revolution.
+          </Typography>
 
-          {isLoading && <LinearProgress />}
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: "100%" }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              variant="outlined"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px",
+                },
+              }}
+            />
 
-          <Divider sx={{ my: 2 }}>OR</Divider>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px",
+                },
+              }}
+            />
 
-          {/* Google Login Button */}
-          <Box display="flex" justifyContent="center">
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              disabled={isLoading}
+              sx={{
+                mt: 4,
+                mb: 2,
+                py: 1.5,
+                borderRadius: "12px",
+                fontWeight: "bold",
+                fontSize: "1rem",
+                background: "linear-gradient(90deg, #00c6ff, #0072ff)",
+                boxShadow: "0 4px 15px rgba(0, 198, 255, 0.3)",
+                "&:hover": { transform: "translateY(-2px)", opacity: 0.9 }
+              }}
+            >
+              {isLoading ? "Signing In..." : "Sign In"}
+            </Button>
+
+            {isLoading && <LinearProgress sx={{ borderRadius: "5px", height: "6px" }} />}
+
+            <Divider sx={{ my: 3, fontSize: "0.75rem", color: "#64748b", fontWeight: 700 }}>
+              OR CONTINUE WITH
+            </Divider>
+
             <Button
               fullWidth
               variant="outlined"
               startIcon={<GoogleIcon />}
               onClick={() => googleLoginHandler()}
               sx={{
-                mt: 1,
-                py: 1.2,
-                borderColor: "#dadce0",
-                color: "#fff",
+                py: 1.5,
+                borderRadius: "12px",
+                borderColor: isLight ? "#e2e8f0" : "rgba(255,255,255,0.2)",
+                color: isLight ? "#1e293b" : "#fff",
                 textTransform: "none",
-                fontWeight: 500,
+                fontWeight: 600,
                 "&:hover": {
-                  borderColor: "#fff",
-                  backgroundColor: "rgba(255,255,255,0.05)",
+                  borderColor: theme.palette.primary.main,
+                  backgroundColor: isLight ? alpha(theme.palette.primary.main, 0.05) : "rgba(255,255,255,0.05)",
                 },
               }}
             >
-              Sign In with Google
+              Google
             </Button>
-          </Box>
 
-          <Grid container justifyContent="flex-end" sx={{ mt: 2 }}>
-            <Grid item>
-              <Link component={RouterLink} to="/register" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
+            <Grid container justifyContent="center" sx={{ mt: 4 }}>
+              <Grid item>
+                <Link 
+                  component={RouterLink} 
+                  to="/register" 
+                  variant="body2" 
+                  sx={{ 
+                    color: theme.palette.primary.main, 
+                    fontWeight: 700,
+                    textDecoration: "none",
+                    "&:hover": { textDecoration: "underline" }
+                  }}
+                >
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
             </Grid>
-          </Grid>
+          </Box>
         </Box>
-      </Box>
-
-      <Copyright sx={{ mt: 8, mb: 4 }} />
-    </Container>
+        <Copyright sx={{ mt: 4 }} />
+      </Container>
+    </Box>
   );
 }

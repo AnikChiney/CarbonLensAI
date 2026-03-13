@@ -23,6 +23,7 @@ import {
   Menu,
   MenuItem,
   useTheme,
+  alpha,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -30,20 +31,36 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const navigate = useNavigate();
+  const isLight = theme.palette.mode === "light";
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [searchInput, setSearchInput] = useState(""); // 🔥 State for search text
   const isOpen = Boolean(anchorEl);
 
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
-  // ✅ Get user directly from Redux (persisted via localStorage)
   const { userInfo } = useSelector((state) => state.auth);
-
-  // Handles both:
-  // { name: "Shuvam" }
-  // { user: { name: "Shuvam" } }
   const user = userInfo?.user || userInfo;
+
+  // 🔥 Functional Search Logic
+  const handleSearchTrigger = (e) => {
+    if (e.key === "Enter" && searchInput.trim() !== "") {
+      const query = searchInput.toLowerCase().trim();
+      
+      // Routing logic based on keywords
+      if (query.includes("carbon")) navigate("/carbon-footprint");
+      else if (query.includes("water")) navigate("/water-usage");
+      else if (query.includes("news") || query.includes("global")) navigate("/global-news");
+      else if (query.includes("local")) navigate("/local-news");
+      else if (query.includes("top") || query.includes("headline")) navigate("/top-headlines");
+      else if (query.includes("tip")) navigate("/ecofriendly-tips");
+      else if (query.includes("who") || query.includes("standard")) navigate("/who-standards");
+      else if (query.includes("dashboard")) navigate("/dashboard");
+      
+      setSearchInput(""); // Clear input after search
+    }
+  };
 
   const logoutHandler = () => {
     dispatch(removeCredentials());
@@ -57,44 +74,44 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
       elevation={0}
       sx={{
         backdropFilter: "blur(12px)",
-        background: "rgba(15, 32, 39, 0.7)",
-        borderBottom: "1px solid rgba(255,255,255,0.08)",
+        backgroundColor: isLight 
+          ? alpha(theme.palette.background.default, 0.8) 
+          : alpha("#0f2027", 0.7),
+        borderBottom: `1px solid ${isLight ? theme.palette.grey[100] : "rgba(255,255,255,0.08)"}`,
+        color: theme.palette.text.primary,
       }}
     >
-      <Toolbar sx={{ justifyContent: "space-between", px: 3 }}>
+      <Toolbar sx={{ justifyContent: "space-between", px: { xs: 1, sm: 3 } }}>
         {/* LEFT SIDE */}
         <FlexBetween gap="1rem">
           <IconButton
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            sx={{
-              color: "#fff",
-              "&:hover": { backgroundColor: "rgba(255,255,255,0.08)" },
-            }}
+            sx={{ color: theme.palette.text.primary }}
           >
             <MenuIcon />
           </IconButton>
 
-          {/* Search */}
+          {/* Search - Responsive width & Functional */}
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "none", sm: "flex" },
               alignItems: "center",
-              backgroundColor: "rgba(255,255,255,0.08)",
+              backgroundColor: isLight ? theme.palette.grey[50] : "rgba(255,255,255,0.08)",
               borderRadius: "12px",
               px: 2,
               py: 0.5,
               width: "260px",
-              transition: "0.3s",
-              "&:hover": {
-                backgroundColor: "rgba(255,255,255,0.15)",
-              },
+              border: isLight ? `1px solid ${theme.palette.grey[200]}` : "none",
             }}
           >
-            <Search sx={{ opacity: 0.6, mr: 1 }} />
+            <Search sx={{ opacity: 0.6, mr: 1, color: theme.palette.text.primary }} />
             <InputBase
               placeholder="Search analytics..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={handleSearchTrigger} // 🔥 Listener for Enter key
               sx={{
-                color: "#fff",
+                color: theme.palette.text.primary,
                 fontSize: "0.9rem",
                 width: "100%",
               }}
@@ -103,23 +120,11 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         </FlexBetween>
 
         {/* RIGHT SIDE */}
-        <FlexBetween gap="1.5rem">
-          {/* Dark Mode Toggle */}
-          <IconButton
-            onClick={() => dispatch(setMode())}
-            sx={{
-              color: "#fff",
-              "&:hover": { backgroundColor: "rgba(255,255,255,0.08)" },
-            }}
-          >
-            {theme.palette.mode === "dark" ? (
-              <DarkModeOutlined />
-            ) : (
-              <LightModeOutlined />
-            )}
+        <FlexBetween gap={{ xs: "0.5rem", sm: "1.5rem" }}>
+          <IconButton onClick={() => dispatch(setMode())} sx={{ color: theme.palette.text.primary }}>
+            {theme.palette.mode === "dark" ? <DarkModeOutlined /> : <LightModeOutlined />}
           </IconButton>
 
-          {/* PROFILE SECTION */}
           <Button
             onClick={handleClick}
             sx={{
@@ -128,12 +133,9 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
               textTransform: "none",
               gap: "0.8rem",
               borderRadius: "12px",
-              px: 2,
-              py: 0.5,
-              backgroundColor: "rgba(255,255,255,0.05)",
-              "&:hover": {
-                backgroundColor: "rgba(255,255,255,0.12)",
-              },
+              px: 1,
+              backgroundColor: isLight ? theme.palette.grey[50] : "rgba(255,255,255,0.05)",
+              border: isLight ? `1px solid ${theme.palette.grey[100]}` : "none",
             }}
           >
             <Box
@@ -141,60 +143,67 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
               src="profile.png"
               alt="profile"
               sx={{
-                width: 36,
-                height: 36,
+                width: 32,
+                height: 32,
                 borderRadius: "50%",
                 objectFit: "cover",
-                border: "2px solid rgba(255,255,255,0.2)",
+                border: `2px solid ${theme.palette.primary.main}`,
               }}
             />
 
-            <Box textAlign="left">
-              <Typography
-                fontWeight="bold"
-                fontSize="0.85rem"
-                sx={{ color: "#fff", lineHeight: 1.2 }}
-              >
+            <Box textAlign="left" sx={{ display: { xs: "none", md: "block" } }}>
+              <Typography fontWeight="bold" fontSize="0.8rem" color={theme.palette.text.primary}>
                 {user?.fname || user?.name || "User"}
               </Typography>
-
-              <Typography
-                fontSize="0.7rem"
-                sx={{ color: "#fff", opacity: 0.9, lineHeight: 1.2 }}
-              >
-                {user?.city || user?.email || ""}
+              <Typography fontSize="0.65rem" color={theme.palette.text.secondary}>
+                {user?.city || "West Bengal"}
               </Typography>
             </Box>
 
-            <ArrowDropDownOutlined sx={{ color: "#d82222ff" }} />
+            <ArrowDropDownOutlined 
+                sx={{ 
+                    color: isLight ? theme.palette.grey[400] : "rgba(255,255,255,0.4)",
+                    display: { xs: "none", sm: "block" } 
+                }} 
+            />
           </Button>
 
-          {/* DROPDOWN MENU */}
           <Menu
             anchorEl={anchorEl}
             open={isOpen}
             onClose={handleClose}
+            disableScrollLock={true}
             PaperProps={{
               sx: {
-                background: "#364a55ff",
-                color: "#dd2828ff",
-                borderRadius: 5,
-                mt: 1,
-                minWidth: 150,
+                backgroundColor: theme.palette.background.alt,
+                color: theme.palette.text.primary,
+                borderRadius: "12px",
+                mt: 1.5,
+                minWidth: 180,
+                boxShadow: isLight ? "0px 10px 25px rgba(0,0,0,0.1)" : theme.shadows[10],
+                border: isLight ? `1px solid ${theme.palette.grey[100]}` : "none",
               },
             }}
           >
+            <Box px={2} py={1} sx={{ display: { md: "none" } }}>
+                 <Typography variant="body2" fontWeight="bold">
+                    {user?.fname || user?.name}
+                 </Typography>
+            </Box>
+            
             <MenuItem
               onClick={logoutHandler}
               sx={{
-                gap: 1,
+                py: 1.5,
+                gap: 2,
+                color: theme.palette.error.main,
                 "&:hover": {
-                  backgroundColor: "rgba(255,255,255,0.08)",
+                  backgroundColor: isLight ? "#fff5f5" : "rgba(216, 34, 34, 0.1)",
                 },
               }}
             >
               <LogoutOutlined fontSize="small" />
-              Log Out
+              <Typography fontWeight="600">Log Out</Typography>
             </MenuItem>
           </Menu>
         </FlexBetween>

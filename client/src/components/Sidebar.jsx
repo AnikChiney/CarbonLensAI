@@ -10,6 +10,7 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
+  useTheme, // Added this
 } from "@mui/material";
 import {
   ChevronLeft,
@@ -29,35 +30,25 @@ import FlexBetween from "./FlexBetween";
 
 const navItems = [
   { text: "Dashboard", route: "dashboard", icon: <HomeOutlined /> },
-
   { text: "For You", icon: null },
-
   { text: "Carbon Footprint", route: "carbon-footprint", icon: <Co2 /> },
   { text: "Water Usage", route: "water-usage", icon: <WaterDrop /> },
   { text: "Ecofriendly Tips", route: "ecofriendly-tips", icon: <Favorite /> },
   { text: "WHO Standards", route: "who-standards", icon: <LocalHospital /> },
-
   { text: "News & Events", icon: null },
-
   { text: "Top Headlines", route: "top-headlines", icon: <Announcement /> },
   { text: "Local", route: "local-news", icon: <Newspaper /> },
   { text: "Global", route: "global-news", icon: <Public /> },
 ];
 
-const Sidebar = ({
-  drawerWidth,
-  isSidebarOpen,
-  setIsSidebarOpen,
-  isNonMobile,
-}) => {
+const Sidebar = ({ drawerWidth, isSidebarOpen, setIsSidebarOpen, isNonMobile }) => {
   const { pathname } = useLocation();
   const [active, setActive] = useState("");
   const navigate = useNavigate();
+  const theme = useTheme(); // 🔥 Use the theme hook
+  const isLight = theme.palette.mode === "light";
 
-  // ✅ USE REDUX INSTEAD OF API
   const { userInfo } = useSelector((state) => state.auth);
-
-  // handle both possible structures
   const user = userInfo?.user || userInfo;
 
   useEffect(() => {
@@ -75,43 +66,48 @@ const Sidebar = ({
           width: drawerWidth,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
-            background: "linear-gradient(180deg, #0f2027, #203a43)",
-            color: "#fff",
-            borderRight: "1px solid rgba(255,255,255,0.08)",
+            // 🔥 Dynamically switch background based on mode
+            background: isLight 
+                ? theme.palette.background.alt 
+                : "linear-gradient(180deg, #0f2027, #203a43)",
+            color: theme.palette.text.primary,
+            borderRight: isLight 
+                ? `1px solid ${theme.palette.grey[100]}` 
+                : "1px solid rgba(255,255,255,0.08)",
             display: "flex",
             flexDirection: "column",
+            transition: "all 0.3s ease",
           },
         }}
       >
-        {/* LOGO */}
         <Box px={3} py={3}>
           <FlexBetween>
             <Box display="flex" alignItems="center" gap="0.8rem">
               <Box
                 component="img"
                 src="logo.jpg"
-                alt="CarbonLensAI Logo"
-                sx={{ width: 42, height: 42 }}
+                alt="Logo"
+                sx={{ width: 42, height: 42, borderRadius: "8px" }}
               />
-              <Typography variant="h5" fontWeight="bold">
+              <Typography 
+                variant="h5" 
+                fontWeight="bold" 
+                color={theme.palette.text.primary}
+              >
                 CarbonLensAI
               </Typography>
             </Box>
 
             {!isNonMobile && (
-              <IconButton
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                sx={{ color: "#fff" }}
-              >
+              <IconButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
                 <ChevronLeft />
               </IconButton>
             )}
           </FlexBetween>
         </Box>
 
-        <Divider sx={{ borderColor: "rgba(255,255,255,0.1)" }} />
+        <Divider sx={{ opacity: isLight ? 0.1 : 0.1 }} />
 
-        {/* NAVIGATION */}
         <List sx={{ mt: 2, flexGrow: 1 }}>
           {navItems.map(({ text, route, icon }) => {
             if (!icon) {
@@ -122,9 +118,10 @@ const Sidebar = ({
                     mt: 3,
                     mb: 1,
                     ml: 3,
-                    fontSize: "0.75rem",
-                    letterSpacing: 2,
-                    opacity: 0.6,
+                    fontSize: "0.7rem",
+                    fontWeight: 700,
+                    letterSpacing: "1.2px",
+                    color: isLight ? theme.palette.grey[500] : "rgba(255,255,255,0.5)",
                   }}
                 >
                   {text.toUpperCase()}
@@ -133,6 +130,7 @@ const Sidebar = ({
             }
 
             const lcText = route;
+            const isSelected = active === lcText;
 
             return (
               <ListItem key={text} disablePadding>
@@ -142,26 +140,24 @@ const Sidebar = ({
                     setActive(lcText);
                   }}
                   sx={{
-                    mx: 2,
+                    mx: 1.5,
                     mb: 0.5,
-                    borderRadius: 2,
-                    backgroundColor:
-                      active === lcText
-                        ? "rgba(0, 255, 170, 0.15)"
+                    borderRadius: "10px",
+                    // 🔥 Dynamic pill background
+                    backgroundColor: isSelected
+                        ? (isLight ? theme.palette.primary[100] : "rgba(0, 255, 170, 0.15)")
                         : "transparent",
-                      borderLeft:
-                        active === lcText
-                          ? "4px solid #00ffaa"
-                          : "4px solid transparent",
+                    "&:hover": {
+                        backgroundColor: isLight ? theme.palette.grey[50] : "rgba(255,255,255,0.05)",
+                    }
                   }}
                 >
                   <ListItemIcon
                     sx={{
-                      color:
-                        active === lcText
-                          ? "#00ffaa"
-                          : "rgba(255,255,255,0.7)",
-                      minWidth: "40px",
+                      color: isSelected
+                          ? (isLight ? theme.palette.primary.main : "#00ffaa")
+                          : (isLight ? theme.palette.grey[600] : "rgba(255,255,255,0.7)"),
+                      minWidth: "35px",
                     }}
                   >
                     {icon}
@@ -170,14 +166,18 @@ const Sidebar = ({
                   <ListItemText
                     primary={text}
                     primaryTypographyProps={{
-                      fontSize: "0.95rem",
-                      fontWeight: active === lcText ? "bold" : 400,
+                      fontSize: "0.85rem",
+                      fontWeight: isSelected ? 600 : 400,
+                      color: isSelected && isLight ? theme.palette.primary.main : "inherit"
                     }}
                   />
 
-                  {active === lcText && (
+                  {isSelected && (
                     <ChevronRightOutlined
-                      sx={{ color: "#00ffaa", fontSize: "20px" }}
+                      sx={{ 
+                        color: isLight ? theme.palette.primary.main : "#00ffaa", 
+                        fontSize: "18px" 
+                      }}
                     />
                   )}
                 </ListItemButton>
@@ -186,28 +186,29 @@ const Sidebar = ({
           })}
         </List>
 
-        {/* USER SECTION */}
-        <Box px={3} pb={3}>
-          <Divider sx={{ borderColor: "rgba(255,255,255,0.1)", mb: 2 }} />
-
-          <Box display="flex" alignItems="center" gap="1rem">
+        <Box px={2} pb={3}>
+          <Box 
+            p="1rem"
+            display="flex" 
+            alignItems="center" 
+            gap="1rem"
+            sx={{
+                backgroundColor: isLight ? theme.palette.grey[50] : "rgba(255,255,255,0.03)",
+                borderRadius: "12px",
+            }}
+          >
             <Box
               component="img"
               src="profile.png"
               alt="profile"
-              sx={{
-                width: 45,
-                height: 45,
-                borderRadius: "50%",
-              }}
+              sx={{ width: 40, height: 40, borderRadius: "50%", border: `2px solid ${theme.palette.primary.main}` }}
             />
-
             <Box>
-              <Typography fontWeight="bold" fontSize="0.9rem">
+              <Typography fontWeight="bold" fontSize="0.85rem">
                 {user?.fname || user?.name || "User"}
               </Typography>
-              <Typography fontSize="0.8rem" sx={{ opacity: 0.7 }}>
-                {user?.city || user?.email || ""}
+              <Typography fontSize="0.75rem" sx={{ opacity: 0.6 }}>
+                {user?.city || "West Bengal"}
               </Typography>
             </Box>
           </Box>

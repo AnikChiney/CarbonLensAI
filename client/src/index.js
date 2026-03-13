@@ -8,11 +8,10 @@ import { configureStore } from "@reduxjs/toolkit";
 import globalReducer from "state";
 import authReducer from "./state/authSlice";
 import { Provider } from "react-redux";
-
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { api } from "state/api";
 
-//  Google OAuth
+// Google OAuth
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const store = configureStore({
@@ -28,12 +27,13 @@ setupListeners(store.dispatch);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
+// Verify Client ID in console (useful for debugging with judges/development)
+const googleId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
 root.render(
   <Provider store={store}>
-    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
+    <GoogleOAuthProvider clientId={googleId}>
+      <App />
     </GoogleOAuthProvider>
   </Provider>
 );
