@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Card,
@@ -14,13 +14,58 @@ import {
   CircularProgress,
 } from "@mui/material";
 
-import LinearProgress from "@mui/material/LinearProgress";
 import Header from "components/Header";
-import { useGetRandomEcofriendlyTipsQuery } from "state/api.js";
 import { Refresh } from "@mui/icons-material";
 import FlexBetween from "components/FlexBetween";
 
-/* ----------------------- Tip Rating ----------------------- */
+/* ---------------- REAL ECO TIPS DATA ---------------- */
+
+const ecoTips = [
+  {
+    _id: "1",
+    title: "Use Public Transport",
+    content:
+      "Switching from private cars to buses or metro can reduce personal carbon emissions by up to 45%.",
+    type: "Transport",
+  },
+  {
+    _id: "2",
+    title: "Switch to LED Lighting",
+    content:
+      "LED bulbs consume up to 80% less electricity than traditional bulbs and last much longer.",
+    type: "Energy",
+  },
+  {
+    _id: "3",
+    title: "Reduce Food Waste",
+    content:
+      "Plan meals and store food properly to prevent waste. Food waste contributes heavily to methane emissions.",
+    type: "Waste",
+  },
+  {
+    _id: "4",
+    title: "Carry Reusable Bags",
+    content:
+      "Using reusable bags helps reduce plastic pollution and protects marine ecosystems.",
+    type: "Lifestyle",
+  },
+  {
+    _id: "5",
+    title: "Cycle for Short Trips",
+    content:
+      "Cycling instead of driving for short distances reduces emissions and improves personal health.",
+    type: "Transport",
+  },
+  {
+    _id: "6",
+    title: "Unplug Idle Electronics",
+    content:
+      "Devices plugged in consume standby power. Unplugging them can reduce electricity usage by 5–10%.",
+    type: "Energy",
+  },
+];
+
+/* ---------------- TIP RATING ---------------- */
 
 const TipRating = () => {
   const [value, setValue] = useState(3);
@@ -33,7 +78,7 @@ const TipRating = () => {
   );
 };
 
-/* ----------------------- Standard Tip Card ----------------------- */
+/* ---------------- TIP CARD ---------------- */
 
 const StdCard = ({ _id, title, content, type }) => {
   const theme = useTheme();
@@ -42,7 +87,6 @@ const StdCard = ({ _id, title, content, type }) => {
   return (
     <Card
       sx={{
-        backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,
         borderRadius: "0.55rem",
       }}
@@ -52,7 +96,6 @@ const StdCard = ({ _id, title, content, type }) => {
         <Typography
           sx={{ fontSize: 14 }}
           color={theme.palette.secondary[700]}
-          gutterBottom
         >
           {type}
         </Typography>
@@ -73,7 +116,6 @@ const StdCard = ({ _id, title, content, type }) => {
 
       <CardActions>
         <Button
-          variant="primary"
           size="small"
           onClick={() => setIsExpanded(!isExpanded)}
         >
@@ -81,22 +123,20 @@ const StdCard = ({ _id, title, content, type }) => {
         </Button>
       </CardActions>
 
-      <Collapse
-        in={isExpanded}
-        timeout="auto"
-        unmountOnExit
-        sx={{ color: theme.palette.neutral[300] }}
-      >
+      <Collapse in={isExpanded}>
         <CardContent>
           <Typography>ID: {_id}</Typography>
-          <Typography>More Coming Soon!</Typography>
+          <Typography>
+            Small actions today create a greener tomorrow 🌍
+          </Typography>
         </CardContent>
       </Collapse>
+
     </Card>
   );
 };
 
-/* ----------------------- Search Component ----------------------- */
+/* ---------------- SEARCH ---------------- */
 
 const TipSearch = ({ setSearch }) => {
   return (
@@ -110,7 +150,7 @@ const TipSearch = ({ setSearch }) => {
   );
 };
 
-/* ----------------------- Filter Component ----------------------- */
+/* ---------------- FILTER ---------------- */
 
 const TipFilter = ({ setFilter }) => {
   const filters = ["All", "Energy", "Transport", "Waste", "Lifestyle"];
@@ -131,18 +171,13 @@ const TipFilter = ({ setFilter }) => {
   );
 };
 
-/* ----------------------- Stats Component ----------------------- */
+/* ---------------- STATS ---------------- */
 
 const TipStats = ({ count }) => {
   const theme = useTheme();
 
   return (
-    <Card
-      sx={{
-        backgroundColor: theme.palette.background.alt,
-        mb: 2,
-      }}
-    >
+    <Card sx={{ backgroundColor: theme.palette.background.alt, mb: 2 }}>
       <CardContent>
         <Typography variant="h5">Total Tips</Typography>
         <Typography variant="h3">{count}</Typography>
@@ -151,23 +186,23 @@ const TipStats = ({ count }) => {
   );
 };
 
-/* ----------------------- AI Suggestion ----------------------- */
+/* ---------------- AI TIP ---------------- */
 
 const AISuggestion = () => {
   return (
     <Card sx={{ mt: 3 }}>
       <CardContent>
-        <Typography variant="h5">AI Sustainability Tip</Typography>
+        <Typography variant="h5">AI Sustainability Suggestion</Typography>
         <Typography>
-          Try replacing short car trips with cycling or walking to reduce
-          carbon emissions and improve health.
+          Consider switching to renewable electricity sources or installing
+          rooftop solar panels to significantly reduce your carbon footprint.
         </Typography>
       </CardContent>
     </Card>
   );
 };
 
-/* ----------------------- Loader ----------------------- */
+/* ---------------- LOADER ---------------- */
 
 const RefreshLoader = () => (
   <Box display="flex" justifyContent="center" mt={4}>
@@ -175,39 +210,28 @@ const RefreshLoader = () => (
   </Box>
 );
 
-/* ----------------------- Main Page ----------------------- */
+/* ---------------- MAIN PAGE ---------------- */
 
 const EcofriendlyTips = () => {
+
   const theme = useTheme();
-
-  const {
-    data: apiData,
-    isLoading,
-    refetch,
-  } = useGetRandomEcofriendlyTipsQuery();
-
-  const isNonMobile = useMediaQuery("(min-width: 1000px)");
-
-  const data = apiData;
+  const isNonMobile = useMediaQuery("(min-width:1000px)");
 
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
 
-  const handleClick = () => {
-    refetch();
-  };
+  const filteredData = ecoTips.filter((tip) => {
 
-  const filteredData =
-    data?.filter((tip) => {
-      const matchesSearch =
-        tip.title.toLowerCase().includes(search.toLowerCase()) ||
-        tip.content.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch =
+      tip.title.toLowerCase().includes(search.toLowerCase()) ||
+      tip.content.toLowerCase().includes(search.toLowerCase());
 
-      const matchesFilter =
-        filter === "All" || tip.type === filter;
+    const matchesFilter =
+      filter === "All" || tip.type === filter;
 
-      return matchesSearch && matchesFilter;
-    }) || [];
+    return matchesSearch && matchesFilter;
+
+  });
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -215,11 +239,11 @@ const EcofriendlyTips = () => {
       <Box display="flex" justifyContent="space-between">
 
         <Header
-          title="Ecofriendly Tips (Hit Refresh!)"
+          title="Ecofriendly Tips"
           subtitle="Green is the New Cool: Discover Fun Eco-Hacks to Save the Planet!"
         />
 
-        <Button variant="contained" onClick={handleClick}>
+        <Button variant="contained">
           <FlexBetween>
             <Refresh fontSize="large" />
             <Box width={6} />
@@ -239,44 +263,28 @@ const EcofriendlyTips = () => {
 
       </Box>
 
-      {!isLoading ? (
-        <Box
-          mt="20px"
-          display="grid"
-          gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-          justifyContent="space-between"
-          rowGap="20px"
-          columnGap="1.33%"
-          sx={{
-            "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-          }}
-        >
-          {filteredData.map(({ title, content, type, _id }) => (
-            <StdCard
-              key={_id}
-              _id={_id}
-              title={title}
-              content={content}
-              type={type}
-            />
-          ))}
-        </Box>
-      ) : (
-        <>
-          <Box sx={{ width: "60%", margin: "2rem 0 2rem 0.2rem" }}>
-            <p
-              style={{
-                color: `${theme.palette.secondary[500]}`,
-              }}
-            >
-              LOADING...
-            </p>
-            <LinearProgress />
-          </Box>
+      <Box
+        mt="20px"
+        display="grid"
+        gridTemplateColumns="repeat(4, minmax(0,1fr))"
+        rowGap="20px"
+        columnGap="1.33%"
+        sx={{
+          "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+        }}
+      >
 
-          <RefreshLoader />
-        </>
-      )}
+        {filteredData.map(({ title, content, type, _id }) => (
+          <StdCard
+            key={_id}
+            _id={_id}
+            title={title}
+            content={content}
+            type={type}
+          />
+        ))}
+
+      </Box>
 
       <AISuggestion />
 
