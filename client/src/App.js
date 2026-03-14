@@ -17,7 +17,7 @@ import Dashboard from "scenes/dashboard";
 import EnvironmentMetrics from "scenes/environmentMetrics";
 
 /* FOR YOU */
-import WaterUsage from "scenes/forYou/waterUsage";
+// from "scenes/forYou/waterUsage";
 import EcofriendlyTips from "scenes/forYou/ecofriendlyTips";
 import WHOstandards from "scenes/forYou/whoStandards";
 import CarbonFootprint from "scenes/forYou/carbonFootprint";
@@ -60,7 +60,7 @@ function App() {
               <Route path="/industrial" element={<Industrial />} />
 
               {/* FOR YOU */}
-              <Route path="/water-usage" element={<WaterUsage />} />
+              {/* <Route path="/water-usage" element={<WaterUsage />} /> */}
               <Route path="/ecofriendly-tips" element={<EcofriendlyTips />} />
               <Route path="/who-standards" element={<WHOstandards />} />
               <Route path="/carbon-footprint" element={<CarbonFootprint />} />
