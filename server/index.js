@@ -1,11 +1,11 @@
 import dotenv from "dotenv";
 dotenv.config();
-
+import carbonRoutes from "./routes/carbon.js";
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
-console.log("NEWS API KEY:", process.env.NEWS_API_KEY);
+console.log("GNEWS API KEY:", process.env.GNEWS_API_KEY);
 
 import helmet from "helmet";
 import morgan from "morgan";
@@ -71,8 +71,9 @@ app.get("/", (req, res) => {
 
 // -------------------- API ROUTES -------------------- //
 
-app.use("/auth", authRoutes);
-app.use("/news", newsRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/news", newsRoutes);
+app.use("/api/carbon", carbonRoutes);
 // -------------------- DATABASE -------------------- //
 
 connectDB();

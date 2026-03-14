@@ -1,112 +1,91 @@
 import express from "express";
 import axios from "axios";
-import dayjs from "dayjs";
 import dotenv from "dotenv";
+// 1. Import the mockNews object from your local file
+import { mockNews } from "../mockData/globalNews.js"; 
+
 dotenv.config();
-
 const router = express.Router();
-const NEWS_API_KEY = process.env.NEWS_API_KEY;
+const GNEWS_API_KEY = process.env.GNEWS_API_KEY;
 
-if (!NEWS_API_KEY) {
-  console.error("❌ NEWS API KEY is missing. Add it to your .env file!");
-}
+// Helper to ensure all articles use 'urlToImage' for your frontend
+const formatArticles = (articles) => {
+  return articles.map(art => ({
+    ...art,
+    urlToImage: art.image || art.urlToImage || art.url // Fallback chain
+  }));
+};
 
 // ---------------------------------------------------------
 // 1. GLOBAL NEWS ROUTE
 // ---------------------------------------------------------
 router.get("/", async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+    const query = "climate OR environment OR sustainability";
+    const { page = 1, pageSize = 10 } = req.query;
 
-    const toDate = dayjs().format("YYYY-MM-DD");
-    const fromDate = dayjs().subtract(7, "day").format("YYYY-MM-DD");
+	const url = `https://gnews.io/api/v4/search?q=${query}&lang=en&max=${pageSize}&page=${page}&apikey=${GNEWS_API_KEY}`;
 
-    const query = "climate OR environment OR sustainability OR 'carbon emissions'";
+    const response = await axios.get(url, { timeout: 5000 });
+    const liveArticles = formatArticles(response.data.articles || []);
 
-    const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(
-      query
-    )}&from=${fromDate}&to=${toDate}&language=en&sortBy=publishedAt&page=${page}&pageSize=${pageSize}&apiKey=${NEWS_API_KEY}`;
+    // 2. SMART MERGE: 
+    // If GNews gives only 1 result, we add articles from your local mockNews.articles
+    const combinedArticles = liveArticles.length < 5 
+      ? [...liveArticles, ...mockNews.articles].slice(0, 12) 
+      : liveArticles;
 
-    const response = await axios.get(url);
-    res.status(200).json(response.data);
+    res.status(200).json({ 
+      articles: combinedArticles, 
+      totalResults: combinedArticles.length 
+    });
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch news", error: error.message });
+    console.error("GNEWS GLOBAL ERROR:", error.message);
+    // 3. FULL FALLBACK: Use your local mockNews object
+    res.status(200).json({ 
+      articles: mockNews.articles, 
+      totalResults: mockNews.numArticles 
+    });
   }
 });
 
 // ---------------------------------------------------------
-// 2. LOCAL NEWS ROUTE
+// 2. LOCAL NEWS ROUTE (Keep GNews here as you said it works)
 // ---------------------------------------------------------
 router.get("/local", async (req, res) => {
   try {
-    const { location } = req.query;
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+    const { location = "India" } = req.query;
+    const query = `${location} environment climate`;
+    const url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&lang=en&max=10&apikey=${GNEWS_API_KEY}`;
 
-    const toDate = dayjs().format("YYYY-MM-DD");
-    const fromDate = dayjs().subtract(15, "day").format("YYYY-MM-DD");
+    const response = await axios.get(url, { timeout: 5000 });
+    const articles = formatArticles(response.data.articles);
 
-    const query = `${location} AND (environment OR climate OR sustainability OR nature)`;
-
-    const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(
-      query
-    )}&from=${fromDate}&to=${toDate}&language=en&sortBy=relevancy&page=${page}&pageSize=${pageSize}&apiKey=${NEWS_API_KEY}`;
-
-    const response = await axios.get(url);
-    res.status(200).json(response.data);
+    res.status(200).json({ articles, totalResults: response.data.totalArticles });
   } catch (error) {
-    console.error("LOCAL NEWS API ERROR:", error.response?.data || error.message);
-    res.status(500).json({
-      message: "Failed to fetch local news",
-      error: error.response?.data || error.message,
-    });
+    console.error("GNEWS LOCAL ERROR:", error.message);
+    res.status(200).json({ articles: [], totalResults: 0 });
   }
 });
 
 // ---------------------------------------------------------
-// 3. TOP HEADLINES ROUTE (Updated with Fallback)
+// 3. TOP HEADLINES ROUTE
 // ---------------------------------------------------------
 router.get("/top-headlines", async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
     const { category } = req.query;
+    const topic = category && category !== "All" ? category.toLowerCase() : "world";
+    const url = `https://gnews.io/api/v4/top-headlines?category=${topic}&lang=en&max=10&apikey=${GNEWS_API_KEY}`;
 
-    const keyword = category && category !== "All" 
-        ? `${category} AND (environment OR climate)` 
-        : "environment OR climate OR sustainability";
+    const response = await axios.get(url, { timeout: 5000 });
+    const articles = formatArticles(response.data.articles);
 
-    // Step 1: Try Top Headlines
-    let response = await axios.get(`https://newsapi.org/v2/top-headlines`, {
-      params: {
-        q: keyword,
-        language: 'en',
-        pageSize,
-        page,
-        apiKey: NEWS_API_KEY
-      }
-    });
-
-    // Step 2: Fallback if 0 results (Crucial for fixing your "No Result" screen)
-    if (response.data.articles.length === 0) {
-      console.log("No top headlines found, falling back to everything endpoint...");
-      response = await axios.get(`https://newsapi.org/v2/everything`, {
-        params: {
-          q: keyword,
-          sortBy: 'popularity', 
-          language: 'en',
-          pageSize,
-          page,
-          apiKey: NEWS_API_KEY
-        }
-      });
-    }
-
-    res.status(200).json(response.data);
+    // If headlines are empty, fallback to local mockNews articles
+    const finalArticles = articles.length > 0 ? articles : mockNews.articles.slice(0, 10);
+    res.status(200).json({ articles: finalArticles, totalResults: finalArticles.length });
   } catch (error) {
-    console.error("TOP HEADLINES ERROR:", error.message);
-    res.status(500).json({ message: "Failed to fetch top headlines" });
+    console.error("GNEWS HEADLINES ERROR:", error.message);
+    res.status(200).json({ articles: mockNews.articles.slice(0, 10), totalResults: 10 });
   }
 });
 
