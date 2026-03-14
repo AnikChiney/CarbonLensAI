@@ -237,7 +237,7 @@ const AISuggestion = () => {
       <CardContent>
 
         <Typography variant="h4" gutterBottom>
-          🤖 AI Sustainability Advisor
+          o AI Sustainability Advisor
         </Typography>
 
         <Typography sx={{ mb: 2 }}>
@@ -247,26 +247,26 @@ const AISuggestion = () => {
         </Typography>
 
         <Typography sx={{ mb: 1 }}>
-          🌱 Small behavioral changes can create massive environmental impact.
+          o Small behavioral changes can create massive environmental impact.
         </Typography>
 
         <Typography sx={{ mb: 1 }}>
-          ⚡ Reducing electricity consumption by just 10% globally could
+          o Reducing electricity consumption by just 10% globally could
           save millions of tons of CO₂ emissions each year.
         </Typography>
 
         <Typography sx={{ mb: 1 }}>
-          🚴 Replacing short car trips with walking or cycling reduces
+          o Replacing short car trips with walking or cycling reduces
           urban air pollution and improves public health.
         </Typography>
 
         <Typography sx={{ mb: 1 }}>
-          ♻️ Recycling and waste segregation conserve natural resources
+          o Recycling and waste segregation conserve natural resources
           and reduce landfill methane emissions.
         </Typography>
 
         <Typography sx={{ mt: 2 }}>
-          💡 In future versions of CarbonLens, this AI system will generate
+          In future versions of CarbonLens, this AI system will generate
           personalized sustainability recommendations based on your
           carbon footprint, energy usage, and lifestyle habits.
         </Typography>
