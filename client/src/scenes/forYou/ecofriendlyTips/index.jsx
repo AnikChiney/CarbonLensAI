@@ -237,7 +237,7 @@ const AISuggestion = () => {
       <CardContent>
 
         <Typography variant="h4" gutterBottom>
-          o AI Sustainability Advisor
+          AI Sustainability Advisor
         </Typography>
 
         <Typography sx={{ mb: 2 }}>
@@ -247,21 +247,21 @@ const AISuggestion = () => {
         </Typography>
 
         <Typography sx={{ mb: 1 }}>
-          o Small behavioral changes can create massive environmental impact.
+          • Small behavioral changes can create massive environmental impact.
         </Typography>
 
         <Typography sx={{ mb: 1 }}>
-          o Reducing electricity consumption by just 10% globally could
+          • Reducing electricity consumption by just 10% globally could
           save millions of tons of CO₂ emissions each year.
         </Typography>
 
         <Typography sx={{ mb: 1 }}>
-          o Replacing short car trips with walking or cycling reduces
+          • Replacing short car trips with walking or cycling reduces
           urban air pollution and improves public health.
         </Typography>
 
         <Typography sx={{ mb: 1 }}>
-          o Recycling and waste segregation conserve natural resources
+          • Recycling and waste segregation conserve natural resources
           and reduce landfill methane emissions.
         </Typography>
 
