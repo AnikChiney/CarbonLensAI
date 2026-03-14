@@ -111,7 +111,7 @@ const Dashboard = () => {
           subtitle="AI-powered carbon emission intelligence platform"
         />
 
-        <Button
+        {/* <Button
           sx={{
             background: "linear-gradient(90deg, #00c6ff, #0072ff)",
             color: "#fff",
@@ -127,7 +127,7 @@ const Dashboard = () => {
         >
           <DownloadOutlined sx={{ mr: 1 }} />
           REPORT
-        </Button>
+        </Button> */}
       </FlexBetween>
 
       {/* MAIN DASHBOARD GRID */}
