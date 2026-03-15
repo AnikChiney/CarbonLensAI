@@ -15,48 +15,48 @@ import { useGetRandomWhoStandardsQuery } from "state/api";
 
 import SimpleLineChart from "components/SimpleLineChart";
 
-/* WHO standards */
+/* ---------------- WHO STANDARD DATA ---------------- */
 
 const whoStandards = [
   {
     _id: "1",
-    title: "PM2.5",
+    title: "PM2.5 (Fine Particles)",
     type: "Air Quality",
     limit: "5 µg/m³",
     current: "42 µg/m³",
     content:
-      "Fine particulate matter penetrates lungs and bloodstream causing respiratory and cardiovascular diseases.",
+      "Fine particulate matter that penetrates deep into lungs and bloodstream causing respiratory and cardiovascular diseases.",
   },
   {
     _id: "2",
-    title: "PM10",
+    title: "PM10 (Coarse Particles)",
     type: "Air Quality",
     limit: "15 µg/m³",
     current: "72 µg/m³",
     content:
-      "Coarse particles from construction, traffic, and dust causing airway irritation.",
+      "Particles originating from dust, construction, and traffic causing airway irritation.",
   },
   {
     _id: "3",
-    title: "NO₂",
+    title: "NO₂ (Nitrogen Dioxide)",
     type: "Traffic Pollution",
     limit: "10 µg/m³",
     current: "36 µg/m³",
     content:
-      "Vehicle emissions contributing to lung inflammation and urban smog.",
+      "Vehicle and industrial emissions contributing to urban smog and respiratory inflammation.",
   },
   {
     _id: "4",
-    title: "O₃",
+    title: "O₃ (Ground-level Ozone)",
     type: "Photochemical Pollution",
     limit: "100 µg/m³",
     current: "120 µg/m³",
     content:
-      "Ground level ozone damages lung tissue and reduces crop productivity.",
+      "Formed by chemical reactions in sunlight and capable of damaging lung tissue.",
   },
 ];
 
-/* user contribution */
+/* ---------------- USER CONTRIBUTION ---------------- */
 
 const userImpactData = [
   { pollutant: "PM2.5", contribution: 18, risk: "High" },
@@ -65,7 +65,7 @@ const userImpactData = [
   { pollutant: "O₃", contribution: 6, risk: "Low" },
 ];
 
-/* pollution trend */
+/* ---------------- TREND DATA ---------------- */
 
 const pollutionTrend = [
   { month: "Jan", value: 35 },
@@ -76,8 +76,6 @@ const pollutionTrend = [
   { month: "Jun", value: 45 },
 ];
 
-/* mitigation trend */
-
 const mitigationTrend = [
   { month: "Jul", value: 42 },
   { month: "Aug", value: 41 },
@@ -87,7 +85,7 @@ const mitigationTrend = [
   { month: "Dec", value: 38 },
 ];
 
-/* WHO standard card */
+/* ---------------- WHO CARD ---------------- */
 
 const StdCard = ({ title, content, type, limit, current }) => {
   const theme = useTheme();
@@ -116,7 +114,7 @@ const StdCard = ({ title, content, type, limit, current }) => {
   );
 };
 
-/* user contribution card */
+/* ---------------- USER CONTRIBUTION CARD ---------------- */
 
 const UserContributionCard = ({ pollutant, contribution, risk }) => {
 
@@ -148,7 +146,7 @@ const UserContributionCard = ({ pollutant, contribution, risk }) => {
   );
 };
 
-/* main page */
+/* ---------------- MAIN PAGE ---------------- */
 
 const WHOstandards = () => {
 
@@ -165,32 +163,35 @@ const WHOstandards = () => {
 
       <Header
         title="WHO Standards"
-        subtitle="Air Quality Limits vs Pollution Impact"
+        subtitle="WHO Air Quality Guidelines and Pollution Impact Analysis"
       />
 
       {isLoading ? (
-        <Box sx={{ width:"60%", margin:"2rem 0" }}>
+        <Box sx={{ width:"60%", margin:"2rem 0 2rem 0.2rem" }}>
           <LinearProgress/>
         </Box>
       ) : (
         <>
-          {/* WHO standards cards */}
+          {/* WHO STANDARD CARDS */}
 
           <Box
             mt="20px"
             display="grid"
             gridTemplateColumns="repeat(4,minmax(0,1fr))"
-            gap="20px"
+            rowGap="20px"
+            columnGap="1.33%"
             sx={{
               "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
             }}
           >
+
             {data.map((item) => (
               <StdCard key={item._id} {...item}/>
             ))}
+
           </Box>
 
-          {/* health explanation */}
+          {/* HEALTH RISKS */}
 
           <Card sx={{ mt:4 }}>
             <CardContent>
@@ -206,14 +207,14 @@ const WHOstandards = () => {
 
               <Typography mt={2}>
                 Industrial workers exposed to particulate pollution
-                experience higher risks of chronic respiratory diseases
+                face increased risks of chronic respiratory illnesses
                 and reduced workplace productivity.
               </Typography>
 
             </CardContent>
           </Card>
 
-          {/* user contribution */}
+          {/* USER CONTRIBUTION */}
 
           <Box mt={6}>
 
@@ -233,31 +234,12 @@ const WHOstandards = () => {
 
           </Box>
 
-          {/* pollution trend */}
+          {/* BOTH TRENDS TOGETHER */}
 
           <SimpleLineChart
             data={pollutionTrend}
             title="Pollution Trend (Before Mitigation)"
           />
-
-          {/* mitigation explanation */}
-
-          <Card sx={{ mt:4 }}>
-            <CardContent>
-
-              <Typography variant="h4">
-                Mitigation Strategies
-              </Typography>
-
-              <Typography mt={2}>
-                Transitioning to renewable energy, improving energy efficiency,
-                and reducing vehicle usage can significantly reduce pollution.
-              </Typography>
-
-            </CardContent>
-          </Card>
-
-          {/* mitigation progress */}
 
           <SimpleLineChart
             data={mitigationTrend}
