@@ -93,7 +93,6 @@ const pollutionTrend = [
   { month: "Mar", value: 48 },
   { month: "Apr", value: 42 },
   { month: "May", value: 38 },
-  { month: "Jun", value: 45 },
 ];
 
 /* ---------------- MITIGATION TREND ---------------- */
