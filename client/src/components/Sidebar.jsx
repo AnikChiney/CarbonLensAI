@@ -10,29 +10,30 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-  useTheme, // Added this
+  useTheme,
+  Tooltip,
 } from "@mui/material";
 import {
   ChevronLeft,
   ChevronRightOutlined,
   HomeOutlined,
-  //WaterDrop,
   Co2,
   Favorite,
   LocalHospital,
   Announcement,
   Newspaper,
   Public,
+  LogoutOutlined, // Added Logout Icon
 } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import FlexBetween from "./FlexBetween";
+import { useLogoutMutation } from "state/api"; // Ensure this matches your API state file
 
 const navItems = [
   { text: "Dashboard", route: "dashboard", icon: <HomeOutlined /> },
   { text: "For You", icon: null },
   { text: "Carbon Footprint", route: "carbon-footprint", icon: <Co2 /> },
-  // { text: "Water Usage", route: "water-usage", icon: <WaterDrop /> },
   { text: "Ecofriendly Tips", route: "ecofriendly-tips", icon: <Favorite /> },
   { text: "WHO Standards", route: "who-standards", icon: <LocalHospital /> },
   { text: "News & Events", icon: null },
@@ -45,15 +46,29 @@ const Sidebar = ({ drawerWidth, isSidebarOpen, setIsSidebarOpen, isNonMobile }) 
   const { pathname } = useLocation();
   const [active, setActive] = useState("");
   const navigate = useNavigate();
-  const theme = useTheme(); // 🔥 Use the theme hook
+  const theme = useTheme();
   const isLight = theme.palette.mode === "light";
 
+  // Redux & API
   const { userInfo } = useSelector((state) => state.auth);
   const user = userInfo?.user || userInfo;
+  const [logout] = useLogoutMutation();
 
   useEffect(() => {
     setActive(pathname.substring(1));
   }, [pathname]);
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+      // Clear local storage (ensure key matches your auth logic)
+      localStorage.removeItem("userInfoEcoTrack"); 
+      navigate("/login");
+      window.location.reload(); // Ensure state is fully reset
+    } catch (err) {
+      console.error("Failed to logout:", err);
+    }
+  };
 
   return (
     <Box component="nav">
@@ -66,7 +81,6 @@ const Sidebar = ({ drawerWidth, isSidebarOpen, setIsSidebarOpen, isNonMobile }) 
           width: drawerWidth,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
-            // 🔥 Dynamically switch background based on mode
             background: isLight 
                 ? theme.palette.background.alt 
                 : "linear-gradient(180deg, #0f2027, #203a43)",
@@ -77,12 +91,13 @@ const Sidebar = ({ drawerWidth, isSidebarOpen, setIsSidebarOpen, isNonMobile }) 
             display: "flex",
             flexDirection: "column",
             transition: "all 0.3s ease",
+            overflowX: "hidden"
           },
         }}
       >
         <Box px={3} py={3}>
           <FlexBetween>
-            <Box display="flex" alignItems="center" gap="0.8rem">
+            <Box display="flex" alignItems="center" gap="0.8rem" sx={{ cursor: "pointer" }} onClick={() => navigate("/dashboard")}>
               <Box
                 component="img"
                 src="logo.jpg"
@@ -108,6 +123,7 @@ const Sidebar = ({ drawerWidth, isSidebarOpen, setIsSidebarOpen, isNonMobile }) 
 
         <Divider sx={{ opacity: isLight ? 0.1 : 0.1 }} />
 
+        {/* Navigation Section */}
         <List sx={{ mt: 2, flexGrow: 1 }}>
           {navItems.map(({ text, route, icon }) => {
             if (!icon) {
@@ -143,7 +159,6 @@ const Sidebar = ({ drawerWidth, isSidebarOpen, setIsSidebarOpen, isNonMobile }) 
                     mx: 1.5,
                     mb: 0.5,
                     borderRadius: "10px",
-                    // 🔥 Dynamic pill background
                     backgroundColor: isSelected
                         ? (isLight ? theme.palette.primary[100] : "rgba(0, 255, 170, 0.15)")
                         : "transparent",
@@ -186,31 +201,52 @@ const Sidebar = ({ drawerWidth, isSidebarOpen, setIsSidebarOpen, isNonMobile }) 
           })}
         </List>
 
+        {/* User Profile & Logout Section */}
         <Box px={2} pb={3}>
           <Box 
-            p="1rem"
+            p="0.8rem"
             display="flex" 
             alignItems="center" 
-            gap="1rem"
+            justifyContent="space-between"
             sx={{
                 backgroundColor: isLight ? theme.palette.grey[50] : "rgba(255,255,255,0.03)",
                 borderRadius: "12px",
+                border: isLight ? "1px solid #eee" : "1px solid rgba(255,255,255,0.05)"
             }}
           >
-            <Box
-              component="img"
-              src="profile.png"
-              alt="profile"
-              sx={{ width: 40, height: 40, borderRadius: "50%", border: `2px solid ${theme.palette.primary.main}` }}
-            />
-            <Box>
-              <Typography fontWeight="bold" fontSize="0.85rem">
-                {user?.fname || user?.name || "User"}
-              </Typography>
-              <Typography fontSize="0.75rem" sx={{ opacity: 0.6 }}>
-                {user?.city || "West Bengal"}
-              </Typography>
+            <Box display="flex" alignItems="center" gap="0.8rem">
+                <Box
+                    component="img"
+                    src="profile.png"
+                    alt="profile"
+                    sx={{ 
+                        width: 38, 
+                        height: 38, 
+                        borderRadius: "50%", 
+                        border: `2px solid ${isLight ? theme.palette.primary.main : "#00ffaa"}` 
+                    }}
+                />
+                <Box>
+                <Typography fontWeight="bold" fontSize="0.8rem">
+                    {user?.fname || user?.name || "User"}
+                </Typography>
+                <Typography fontSize="0.7rem" sx={{ opacity: 0.6 }}>
+                    {user?.city || "West Bengal"}
+                </Typography>
+                </Box>
             </Box>
+            
+            <Tooltip title="Logout" arrow>
+                <IconButton 
+                    onClick={handleLogout}
+                    sx={{ 
+                        color: isLight ? theme.palette.error.main : "#ff4d4d",
+                        "&:hover": { backgroundColor: "rgba(255, 77, 77, 0.1)" }
+                    }}
+                >
+                    <LogoutOutlined fontSize="small" />
+                </IconButton>
+            </Tooltip>
           </Box>
         </Box>
       </Drawer>
