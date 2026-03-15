@@ -322,17 +322,19 @@ const MitigationStrategiesBox = () => {
 
 /* ---------------- MITIGATION PROGRESS ---------------- */
 
-const MitigationProgress = () => (
-  <Box mt={5}>
+function MitigationProgress() {
+	return (
+		<Box mt={5}>
 
-    <Typography variant="h4" mb={2}>
-      Pollution Reduction After Mitigation
-    </Typography>
+			<Typography variant="h4" mb={2}>
+				Pollution Reduction After Mitigation
+			</Typography>
 
-    <SimpleLineChart data={mitigationTrend} />
+			<SimpleLineChart data={mitigationTrend} />
 
-  </Box>
-);
+		</Box>
+	);
+}
 
 /* ---------------- MAIN PAGE ---------------- */
 
@@ -378,6 +380,8 @@ const WHOstandards = () => {
           <HealthImpact/>
 
           <UserImpactSection/>
+
+		  <MitigationStrategiesBox/>
 
           <MitigationProgress/>
         </>
