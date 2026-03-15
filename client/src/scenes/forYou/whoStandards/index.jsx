@@ -246,12 +246,11 @@ const UserImpactSection = () => {
         ))}
       </Box>
 
-      <Box mt={5}>
-        <Typography variant="h4" mb={2}>
-          Pollution Trend
-        </Typography>
-
-        <SimpleLineChart data={pollutionTrend} />
+      <Box mt={6}>
+        <SimpleLineChart
+          data={pollutionTrend}
+          title="Pollution Trend"
+        />
       </Box>
 
     </Box>
@@ -270,48 +269,37 @@ const MitigationStrategiesBox = () => {
         </Typography>
 
         <Typography mt={2}>
-          Based on your current contribution to pollutants such as PM2.5, PM10,
-          NO₂, and O₃, the following mitigation steps can significantly reduce
-          environmental and health risks.
+          Based on your contribution to pollutants such as PM2.5, PM10,
+          NO₂, and O₃, the following mitigation strategies can reduce
+          environmental impact.
         </Typography>
 
         <Typography mt={3}><b>For Individuals:</b></Typography>
 
         <Typography mt={1}>
-          • Reduce frequent use of private vehicles and shift toward public
-          transportation, cycling, or walking to lower NO₂ and PM emissions.
+          • Reduce use of private vehicles and switch to public transport.
         </Typography>
 
         <Typography>
-          • Optimize electricity consumption and adopt renewable energy sources
-          to reduce fossil fuel related particulate emissions.
+          • Reduce electricity consumption and shift to renewable energy.
         </Typography>
 
         <Typography>
-          • Avoid open waste burning and support recycling initiatives to
-          prevent particulate pollution.
+          • Avoid burning waste and adopt recycling practices.
         </Typography>
 
         <Typography mt={3}><b>For Industries:</b></Typography>
 
         <Typography mt={1}>
-          • Install emission control technologies such as electrostatic
-          precipitators and scrubbers to capture particulate matter.
+          • Install emission control systems like scrubbers and filters.
         </Typography>
 
         <Typography>
-          • Transition toward cleaner fuels and renewable energy systems in
-          manufacturing processes.
+          • Transition toward cleaner fuels and renewable energy.
         </Typography>
 
         <Typography>
-          • Implement efficient energy management and pollution monitoring
-          systems to reduce overall industrial emissions.
-        </Typography>
-
-        <Typography mt={2}>
-          Implementing these mitigation strategies can gradually reduce
-          pollution levels, as reflected in the mitigation trend graph below.
+          • Implement continuous pollution monitoring systems.
         </Typography>
 
       </CardContent>
@@ -323,13 +311,12 @@ const MitigationStrategiesBox = () => {
 
 function MitigationProgress() {
 	return (
-		<Box mt={5}>
+		<Box mt={6}>
 
-			<Typography variant="h4" mb={2}>
-				Pollution Reduction After Mitigation
-			</Typography>
-
-			<SimpleLineChart data={mitigationTrend} />
+			<SimpleLineChart
+				data={mitigationTrend}
+				title="Pollution Reduction After Mitigation"
+			/>
 
 		</Box>
 	);
