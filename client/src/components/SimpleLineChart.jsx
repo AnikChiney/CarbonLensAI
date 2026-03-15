@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 const SimpleLineChart = ({ data, title }) => {
-  const theme = useTheme();
 
   const width = 720;
   const height = 340;
@@ -54,8 +53,8 @@ const SimpleLineChart = ({ data, title }) => {
               x2={width - padding}
               y1={y}
               y2={y}
-              stroke={theme.palette.secondary[200]}
-              strokeOpacity={0.25}
+              stroke="#888"
+              strokeOpacity={0.2}
             />
           );
         })}
@@ -64,15 +63,15 @@ const SimpleLineChart = ({ data, title }) => {
 
         <polygon
           points={areaPoints}
-          fill={theme.palette.primary.main}
+          fill="#2ecc71"
           opacity="0.15"
         />
 
-        {/* LINE */}
+        {/* GREEN TREND LINE */}
 
         <polyline
           fill="none"
-          stroke={theme.palette.primary.main}
+          stroke="#2ecc71"
           strokeWidth="3"
           points={points}
         />
@@ -89,7 +88,7 @@ const SimpleLineChart = ({ data, title }) => {
                 cx={cx}
                 cy={cy}
                 r="6"
-                fill={theme.palette.primary.main}
+                fill="#2ecc71"
                 stroke="#fff"
                 strokeWidth="2"
                 onMouseEnter={() =>
@@ -98,7 +97,7 @@ const SimpleLineChart = ({ data, title }) => {
                 onMouseLeave={() => setHover(null)}
               />
 
-              {/* X LABELS (MONTHS) */}
+              {/* MONTH LABEL */}
 
               <text
                 x={cx}
@@ -106,7 +105,6 @@ const SimpleLineChart = ({ data, title }) => {
                 textAnchor="middle"
                 fontSize="13"
                 fill="#ffffff"
-                style={{ opacity: 0.85 }}
               >
                 {d.month}
               </text>
@@ -114,7 +112,7 @@ const SimpleLineChart = ({ data, title }) => {
           );
         })}
 
-        {/* Y LABELS */}
+        {/* Y AXIS */}
 
         {[0,1,2,3,4].map((i) => {
           const value = Math.round(min + (i / 4) * (max - min));
@@ -127,7 +125,7 @@ const SimpleLineChart = ({ data, title }) => {
               y={y}
               fontSize="12"
               fill="#ffffff"
-              style={{ opacity: 0.7 }}
+              opacity="0.8"
             >
               {value}
             </text>
@@ -143,7 +141,7 @@ const SimpleLineChart = ({ data, title }) => {
               y={hover.y - 38}
               width="45"
               height="22"
-              fill={theme.palette.primary.main}
+              fill="#2ecc71"
               rx="4"
             />
 
