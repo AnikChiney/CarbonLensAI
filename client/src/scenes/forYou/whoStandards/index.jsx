@@ -92,17 +92,17 @@ const pollutionTrend = [
   { month: "Dec", value: 48 },
   { month: "Jan", value: 52 },
   { month: "Feb", value: 46 },
-  { month: "Mar", value: 62 },
+  { month: "Mar", value: 56 },
 ];
 
 /* ---------------- MITIGATION TREND ---------------- */
 
 const mitigationTrend = [
-  { month: "June", value: 41 },
-  { month: "Jul", value: 40 },
+  { month: "June", value: 42 },
+  { month: "Jul", value: 41 },
   { month: "Aug", value: 39 },
   { month: "Sep", value: 39 },
-  { month: "Oct", value: 37.5 },
+  { month: "Oct", value: 40 },
 ];
 
 /* ---------------- WHO STANDARD CARD ---------------- */
