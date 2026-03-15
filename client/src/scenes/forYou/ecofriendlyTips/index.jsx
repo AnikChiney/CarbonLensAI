@@ -24,6 +24,7 @@ const ecoTips = [
     content:
       "Switching from private cars to buses or metro can reduce personal carbon emissions by up to 45%. Public transport is also 3–5× more energy efficient per passenger and helps reduce traffic congestion and fuel consumption.",
     type: "Transport",
+    rating: 5,
   },
   {
     _id: "2",
@@ -31,6 +32,7 @@ const ecoTips = [
     content:
       "LED bulbs consume up to 80% less electricity than traditional bulbs and last up to 25 times longer. Replacing just five bulbs in a home can reduce around 200 kg of CO₂ emissions annually.",
     type: "Energy",
+    rating: 4,
   },
   {
     _id: "3",
@@ -38,6 +40,7 @@ const ecoTips = [
     content:
       "Food waste produces methane gas in landfills, which is 25× more harmful than CO₂. Planning meals and composting leftovers can reduce environmental impact significantly.",
     type: "Waste",
+    rating: 5,
   },
   {
     _id: "4",
@@ -45,6 +48,7 @@ const ecoTips = [
     content:
       "Plastic bags take hundreds of years to decompose. Using reusable cloth bags helps reduce plastic pollution and protects marine ecosystems.",
     type: "Lifestyle",
+    rating: 3,
   },
   {
     _id: "5",
@@ -52,6 +56,7 @@ const ecoTips = [
     content:
       "Nearly half of urban trips are under 5 km. Cycling instead of driving reduces emissions, improves air quality, and boosts cardiovascular health.",
     type: "Transport",
+    rating: 4,
   },
   {
     _id: "6",
@@ -59,6 +64,7 @@ const ecoTips = [
     content:
       "Standby power accounts for 5–10% of household electricity use. Unplugging unused devices or using smart power strips helps reduce wasted energy.",
     type: "Energy",
+    rating: 3,
   },
   {
     _id: "7",
@@ -66,6 +72,7 @@ const ecoTips = [
     content:
       "A mature tree can absorb around 22 kg of CO₂ annually. Trees improve air quality, reduce urban heat, and support biodiversity.",
     type: "Lifestyle",
+    rating: 5,
   },
   {
     _id: "8",
@@ -73,6 +80,7 @@ const ecoTips = [
     content:
       "Energy-efficient appliances consume up to 30% less electricity and help reduce both energy bills and carbon emissions.",
     type: "Energy",
+    rating: 4,
   },
   {
     _id: "9",
@@ -80,6 +88,7 @@ const ecoTips = [
     content:
       "Water treatment and pumping require large amounts of energy. Conserving water helps reduce energy consumption and environmental impact.",
     type: "Lifestyle",
+    rating: 3,
   },
   {
     _id: "10",
@@ -87,25 +96,13 @@ const ecoTips = [
     content:
       "Local products travel shorter distances, reducing transportation emissions and supporting local economies.",
     type: "Lifestyle",
+    rating: 4,
   },
 ];
 
-/* ---------------- RATING ---------------- */
-
-const TipRating = () => {
-  const [value, setValue] = useState(3);
-
-  return (
-    <Rating
-      value={value}
-      onChange={(event, newValue) => setValue(newValue)}
-    />
-  );
-};
-
 /* ---------------- TIP CARD ---------------- */
 
-const StdCard = ({ title, content, type }) => {
+const StdCard = ({ title, content, type, rating }) => {
   const theme = useTheme();
 
   return (
@@ -126,14 +123,14 @@ const StdCard = ({ title, content, type }) => {
 
         <Typography variant="h3">{title}</Typography>
 
-        <Box height={10} />
+        <Box height={10}></Box>
 
         <Typography variant="h5" sx={{ color: theme.palette.primary[100] }}>
           {content}
         </Typography>
 
         <Box mt={2}>
-          <TipRating />
+          <Rating value={rating} readOnly />
         </Box>
 
       </CardContent>
