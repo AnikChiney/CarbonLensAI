@@ -259,6 +259,67 @@ const UserImpactSection = () => {
   );
 };
 
+/* ---------------- MITIGATION STRATEGIES ---------------- */
+
+const MitigationStrategiesBox = () => {
+  return (
+    <Card sx={{ mt: 4 }}>
+      <CardContent>
+
+        <Typography variant="h4">
+          Recommended Mitigation Strategies
+        </Typography>
+
+        <Typography mt={2}>
+          Based on your current contribution to pollutants such as PM2.5, PM10,
+          NO₂, and O₃, the following mitigation steps can significantly reduce
+          environmental and health risks.
+        </Typography>
+
+        <Typography mt={3}><b>For Individuals:</b></Typography>
+
+        <Typography mt={1}>
+          • Reduce frequent use of private vehicles and shift toward public
+          transportation, cycling, or walking to lower NO₂ and PM emissions.
+        </Typography>
+
+        <Typography>
+          • Optimize electricity consumption and adopt renewable energy sources
+          to reduce fossil fuel related particulate emissions.
+        </Typography>
+
+        <Typography>
+          • Avoid open waste burning and support recycling initiatives to
+          prevent particulate pollution.
+        </Typography>
+
+        <Typography mt={3}><b>For Industries:</b></Typography>
+
+        <Typography mt={1}>
+          • Install emission control technologies such as electrostatic
+          precipitators and scrubbers to capture particulate matter.
+        </Typography>
+
+        <Typography>
+          • Transition toward cleaner fuels and renewable energy systems in
+          manufacturing processes.
+        </Typography>
+
+        <Typography>
+          • Implement efficient energy management and pollution monitoring
+          systems to reduce overall industrial emissions.
+        </Typography>
+
+        <Typography mt={2}>
+          Implementing these mitigation strategies can gradually reduce
+          pollution levels, as reflected in the mitigation trend graph below.
+        </Typography>
+
+      </CardContent>
+    </Card>
+  );
+};
+
 /* ---------------- MITIGATION PROGRESS ---------------- */
 
 const MitigationProgress = () => (
