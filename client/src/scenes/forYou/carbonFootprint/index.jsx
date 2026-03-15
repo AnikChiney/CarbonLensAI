@@ -137,7 +137,7 @@ const CarbonFootprint = () => {
 
           {!data && (
             <Typography color="orange" fontSize="0.9rem">
-              Showing demo data (API unavailable)
+              
             </Typography>
           )}
         </Box>
