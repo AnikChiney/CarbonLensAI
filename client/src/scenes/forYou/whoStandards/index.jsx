@@ -25,7 +25,7 @@ const whoStandards = [
     limit: "5 µg/m³",
     current: "42 µg/m³",
     content:
-      "Fine particulate matter that penetrates deep into lungs and bloodstream causing respiratory and cardiovascular diseases.",
+      "Fine particulate matter that penetrates deep into lungs and bloodstream causing severe health issues.",
   },
   {
     _id: "2",
@@ -34,7 +34,7 @@ const whoStandards = [
     limit: "15 µg/m³",
     current: "72 µg/m³",
     content:
-      "Particles originating from dust, construction, and traffic causing airway irritation.",
+      "Particles from dust, construction, and road traffic that irritate respiratory pathways.",
   },
   {
     _id: "3",
@@ -43,7 +43,7 @@ const whoStandards = [
     limit: "10 µg/m³",
     current: "36 µg/m³",
     content:
-      "Vehicle and industrial emissions contributing to urban smog and respiratory inflammation.",
+      "Emitted mainly from vehicles and power plants causing airway inflammation.",
   },
   {
     _id: "4",
@@ -52,20 +52,40 @@ const whoStandards = [
     limit: "100 µg/m³",
     current: "120 µg/m³",
     content:
-      "Formed by chemical reactions in sunlight and capable of damaging lung tissue.",
+      "Formed by chemical reactions between pollutants and sunlight damaging lung tissue.",
   },
 ];
 
-/* ---------------- USER CONTRIBUTION ---------------- */
+/* ---------------- USER CONTRIBUTION DATA ---------------- */
 
 const userImpactData = [
-  { pollutant: "PM2.5", contribution: 18, risk: "High" },
-  { pollutant: "PM10", contribution: 12, risk: "Moderate" },
-  { pollutant: "NO₂", contribution: 9, risk: "Moderate" },
-  { pollutant: "O₃", contribution: 6, risk: "Low" },
+  {
+    pollutant: "PM2.5",
+    contribution: 18,
+    risk: "High",
+    source: "Vehicle emissions & fossil fuel electricity",
+  },
+  {
+    pollutant: "PM10",
+    contribution: 12,
+    risk: "Moderate",
+    source: "Urban dust and construction activity",
+  },
+  {
+    pollutant: "NO2",
+    contribution: 9,
+    risk: "Moderate",
+    source: "Traffic and industrial emissions",
+  },
+  {
+    pollutant: "O3",
+    contribution: 6,
+    risk: "Low",
+    source: "Secondary atmospheric reactions",
+  },
 ];
 
-/* ---------------- TREND DATA ---------------- */
+/* ---------------- POLLUTION TREND ---------------- */
 
 const pollutionTrend = [
   { month: "Jan", value: 35 },
@@ -76,16 +96,18 @@ const pollutionTrend = [
   { month: "Jun", value: 45 },
 ];
 
+/* ---------------- MITIGATION TREND ---------------- */
+
 const mitigationTrend = [
-  { month: "Jul", value: 42 },
-  { month: "Aug", value: 41 },
-  { month: "Sep", value: 41 },
-  { month: "Oct", value: 40 },
-  { month: "Nov", value: 39 },
+  { month: "Jul", value: 40 },
+  { month: "Aug", value: 39 },
+  { month: "Sep", value: 39 },
+  { month: "Oct", value: 37.5 },
+  { month: "Nov", value: 37 },
   { month: "Dec", value: 38 },
 ];
 
-/* ---------------- WHO CARD ---------------- */
+/* ---------------- WHO STANDARD CARD ---------------- */
 
 const StdCard = ({ title, content, type, limit, current }) => {
   const theme = useTheme();
@@ -102,7 +124,9 @@ const StdCard = ({ title, content, type, limit, current }) => {
 
         <Box height={10} />
 
-        <Typography variant="h5">{content}</Typography>
+        <Typography variant="h5" sx={{ color: theme.palette.primary[100] }}>
+          {content}
+        </Typography>
 
         <Box mt={2}>
           <Typography><b>WHO Limit:</b> {limit}</Typography>
@@ -116,14 +140,12 @@ const StdCard = ({ title, content, type, limit, current }) => {
 
 /* ---------------- USER CONTRIBUTION CARD ---------------- */
 
-const UserContributionCard = ({ pollutant, contribution, risk }) => {
+const UserContributionCard = ({ pollutant, contribution, risk, source }) => {
 
   const riskColor =
-    risk === "High"
-      ? "red"
-      : risk === "Moderate"
-      ? "orange"
-      : "green";
+    risk === "High" ? "red" :
+    risk === "Moderate" ? "orange" :
+    "green";
 
   const theme = useTheme();
 
@@ -137,6 +159,10 @@ const UserContributionCard = ({ pollutant, contribution, risk }) => {
           <b>User Contribution:</b> {contribution}%
         </Typography>
 
+        <Typography mt={1}>
+          <b>Main Source:</b> {source}
+        </Typography>
+
         <Typography mt={1} color={riskColor} fontWeight="bold">
           Risk Level: {risk}
         </Typography>
@@ -146,16 +172,115 @@ const UserContributionCard = ({ pollutant, contribution, risk }) => {
   );
 };
 
+/* ---------------- HEALTH IMPACT ---------------- */
+
+const HealthImpact = () => (
+  <Card sx={{ mt: 4 }}>
+    <CardContent>
+
+      <Typography variant="h4">Health Risks of Air Pollution</Typography>
+
+      <Typography mt={2}><b>Individual Health Risks:</b></Typography>
+
+      <Typography mt={1}>
+        • Chronic respiratory diseases including asthma and bronchitis.
+      </Typography>
+
+      <Typography>
+        • Cardiovascular diseases such as heart attacks and hypertension.
+      </Typography>
+
+      <Typography>
+        • Reduced lung capacity and long-term breathing disorders.
+      </Typography>
+
+      <Typography>
+        • Increased risk of stroke and lung cancer.
+      </Typography>
+
+      <Typography mt={2}><b>Industrial & Occupational Risks:</b></Typography>
+
+      <Typography mt={1}>
+        • Workers exposed to particulate pollution face higher respiratory illness rates.
+      </Typography>
+
+      <Typography>
+        • Long-term industrial emissions increase health risks for surrounding communities.
+      </Typography>
+
+      <Typography>
+        • Increased healthcare costs and reduced workforce productivity.
+      </Typography>
+
+      <Typography mt={2}>
+        According to WHO, air pollution causes nearly
+        <b> 7 million premature deaths globally every year.</b>
+      </Typography>
+
+    </CardContent>
+  </Card>
+);
+
+/* ---------------- USER IMPACT SECTION ---------------- */
+
+const UserImpactSection = () => {
+
+  const isNonMobile = useMediaQuery("(min-width:1000px)");
+
+  return (
+    <Box mt={6}>
+
+      <Typography variant="h3" mb={3}>
+        Your Contribution to WHO Pollution Indicators
+      </Typography>
+
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(4,minmax(0,1fr))"
+        gap="20px"
+        sx={{
+          "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+        }}
+      >
+        {userImpactData.map((item, i) => (
+          <UserContributionCard key={i} {...item} />
+        ))}
+      </Box>
+
+      <Box mt={5}>
+        <Typography variant="h4" mb={2}>
+          Pollution Trend
+        </Typography>
+
+        <SimpleLineChart data={pollutionTrend} />
+      </Box>
+
+    </Box>
+  );
+};
+
+/* ---------------- MITIGATION PROGRESS ---------------- */
+
+const MitigationProgress = () => (
+  <Box mt={5}>
+
+    <Typography variant="h4" mb={2}>
+      Pollution Reduction After Mitigation
+    </Typography>
+
+    <SimpleLineChart data={mitigationTrend} />
+
+  </Box>
+);
+
 /* ---------------- MAIN PAGE ---------------- */
 
 const WHOstandards = () => {
 
-  const theme = useTheme();
-  const isNonMobile = useMediaQuery("(min-width:1000px)");
-
   const { data: apiData, isLoading } =
     useGetRandomWhoStandardsQuery();
 
+  const isNonMobile = useMediaQuery("(min-width:1000px)");
   const data = apiData?.data || whoStandards;
 
   return (
@@ -172,8 +297,6 @@ const WHOstandards = () => {
         </Box>
       ) : (
         <>
-          {/* WHO STANDARD CARDS */}
-
           <Box
             mt="20px"
             display="grid"
@@ -185,67 +308,17 @@ const WHOstandards = () => {
             }}
           >
 
-            {data.map((item) => (
-              <StdCard key={item._id} {...item}/>
+            {data?.map(({title,content,type,limit,current,_id}) => (
+              <StdCard key={_id} {...{title,content,type,limit,current}} />
             ))}
 
           </Box>
 
-          {/* HEALTH RISKS */}
+          <HealthImpact/>
 
-          <Card sx={{ mt:4 }}>
-            <CardContent>
+          <UserImpactSection/>
 
-              <Typography variant="h4">
-                Health Risks of Air Pollution
-              </Typography>
-
-              <Typography mt={2}>
-                Exposure to polluted air can cause respiratory diseases,
-                cardiovascular disorders, stroke, and lung cancer.
-              </Typography>
-
-              <Typography mt={2}>
-                Industrial workers exposed to particulate pollution
-                face increased risks of chronic respiratory illnesses
-                and reduced workplace productivity.
-              </Typography>
-
-            </CardContent>
-          </Card>
-
-          {/* USER CONTRIBUTION */}
-
-          <Box mt={6}>
-
-            <Typography variant="h3" mb={3}>
-              Your Contribution to Pollution
-            </Typography>
-
-            <Box
-              display="grid"
-              gridTemplateColumns="repeat(4,minmax(0,1fr))"
-              gap="20px"
-            >
-              {userImpactData.map((item,i) => (
-                <UserContributionCard key={i} {...item}/>
-              ))}
-            </Box>
-
-          </Box>
-
-          {/* BOTH TRENDS TOGETHER */}
-
-          <SimpleLineChart
-            data={pollutionTrend}
-            title="Pollution Trend (Before Mitigation)"
-          />
-
-          <SimpleLineChart
-            data={mitigationTrend}
-            title="Pollution Reduction After Mitigation"
-          />
-
+          <MitigationProgress/>
         </>
       )}
 
