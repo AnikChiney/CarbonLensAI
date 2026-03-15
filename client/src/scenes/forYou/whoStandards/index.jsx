@@ -88,22 +88,21 @@ const userImpactData = [
 /* ---------------- POLLUTION TREND ---------------- */
 
 const pollutionTrend = [
-  { month: "Jan", value: 35 },
-  { month: "Feb", value: 40 },
-  { month: "Mar", value: 48 },
-  { month: "Apr", value: 42 },
-  { month: "May", value: 38 },
+  { month: "Nov", value: 50 },
+  { month: "Dec", value: 48 },
+  { month: "Jan", value: 52 },
+  { month: "Feb", value: 46 },
+  { month: "Mar", value: 62 },
 ];
 
 /* ---------------- MITIGATION TREND ---------------- */
 
 const mitigationTrend = [
+  { month: "June", value: 41 },
   { month: "Jul", value: 40 },
   { month: "Aug", value: 39 },
   { month: "Sep", value: 39 },
   { month: "Oct", value: 37.5 },
-  { month: "Nov", value: 37 },
-  { month: "Dec", value: 38 },
 ];
 
 /* ---------------- WHO STANDARD CARD ---------------- */
@@ -367,7 +366,7 @@ const WHOstandards = () => {
 
           <UserImpactSection/>
 
-		  <MitigationStrategiesBox/>
+          <MitigationStrategiesBox/>
 
           <MitigationProgress/>
         </>

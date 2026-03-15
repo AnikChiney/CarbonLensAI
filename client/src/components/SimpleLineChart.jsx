@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 
 const SimpleLineChart = ({ data, title }) => {
-  const width = 700;
-  const height = 320;
-  const padding = 50;
+  const theme = useTheme();
+
+  const width = 720;
+  const height = 340;
+  const padding = 60;
 
   const values = data.map((d) => d.value);
   const max = Math.max(...values);
@@ -31,15 +33,20 @@ const SimpleLineChart = ({ data, title }) => {
 
   return (
     <Box mt={4}>
-      <Typography variant="h4" mb={2}>
-        {title}
-      </Typography>
+
+      {title && (
+        <Typography variant="h4" mb={2}>
+          {title}
+        </Typography>
+      )}
 
       <svg width="100%" viewBox={`0 0 ${width} ${height}`}>
 
-        {/* grid lines */}
-        {[0, 1, 2, 3, 4].map((i) => {
+        {/* GRID */}
+
+        {[0,1,2,3,4].map((i) => {
           const y = padding + (i / 4) * (height - padding * 2);
+
           return (
             <line
               key={i}
@@ -47,27 +54,31 @@ const SimpleLineChart = ({ data, title }) => {
               x2={width - padding}
               y1={y}
               y2={y}
-              stroke="#e0e0e0"
+              stroke={theme.palette.secondary[200]}
+              strokeOpacity={0.25}
             />
           );
         })}
 
-        {/* shaded area */}
+        {/* AREA */}
+
         <polygon
           points={areaPoints}
-          fill="#4caf50"
+          fill={theme.palette.primary.main}
           opacity="0.15"
         />
 
-        {/* trend line */}
+        {/* LINE */}
+
         <polyline
           fill="none"
-          stroke="#2e7d32"
+          stroke={theme.palette.primary.main}
           strokeWidth="3"
           points={points}
         />
 
-        {/* data points */}
+        {/* DATA POINTS */}
+
         {data.map((d, i) => {
           const cx = scaleX(i);
           const cy = scaleY(d.value);
@@ -77,18 +88,25 @@ const SimpleLineChart = ({ data, title }) => {
               <circle
                 cx={cx}
                 cy={cy}
-                r="5"
-                fill="#2e7d32"
-                onMouseEnter={() => setHover({ x: cx, y: cy, value: d.value })}
+                r="6"
+                fill={theme.palette.primary.main}
+                stroke="#fff"
+                strokeWidth="2"
+                onMouseEnter={() =>
+                  setHover({ x: cx, y: cy, value: d.value })
+                }
                 onMouseLeave={() => setHover(null)}
               />
 
-              {/* x labels */}
+              {/* X LABELS (MONTHS) */}
+
               <text
                 x={cx}
-                y={height - padding + 20}
+                y={height - padding + 25}
                 textAnchor="middle"
-                fontSize="12"
+                fontSize="13"
+                fill="#ffffff"
+                style={{ opacity: 0.85 }}
               >
                 {d.month}
               </text>
@@ -96,37 +114,42 @@ const SimpleLineChart = ({ data, title }) => {
           );
         })}
 
-        {/* y labels */}
-        {[0, 1, 2, 3, 4].map((i) => {
+        {/* Y LABELS */}
+
+        {[0,1,2,3,4].map((i) => {
           const value = Math.round(min + (i / 4) * (max - min));
           const y = height - padding - (i / 4) * (height - padding * 2);
 
           return (
             <text
               key={i}
-              x={10}
+              x={15}
               y={y}
               fontSize="12"
+              fill="#ffffff"
+              style={{ opacity: 0.7 }}
             >
               {value}
             </text>
           );
         })}
 
-        {/* tooltip */}
+        {/* TOOLTIP */}
+
         {hover && (
           <g>
             <rect
-              x={hover.x - 25}
-              y={hover.y - 35}
-              width="50"
-              height="20"
-              fill="#333"
+              x={hover.x - 22}
+              y={hover.y - 38}
+              width="45"
+              height="22"
+              fill={theme.palette.primary.main}
               rx="4"
             />
+
             <text
               x={hover.x}
-              y={hover.y - 20}
+              y={hover.y - 23}
               fill="white"
               fontSize="12"
               textAnchor="middle"
